@@ -7,40 +7,39 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeliveryOfWagon {
+public class MemoOfDelivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long deliveryId;
+    private Long memoId;
     private Instant created;
     private Date startDate;
-    private Date endDate;
-    private double cargoWeight;
-    private boolean loadUnloadWork;
-    private double shuntingWorks;
 
-    @ManyToOne( fetch = FetchType.EAGER,
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
+
+    @OneToMany( mappedBy = "memoOfDelivery",
+            fetch = FetchType.LAZY,
             cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
     )
-    private MemoOfDelivery memoOfDelivery;
+    private List<DeliveryOfWagon> deliveryOfWagonList;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "operation_id")
     private CargoOperation cargoOperation;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "wagon_id")
-    private Wagon wagon;
-
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User author;
+    @JoinColumn(name = "signer_id")
+    private Signer signer;
+    private String comment;
 }

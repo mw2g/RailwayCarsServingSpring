@@ -12,29 +12,15 @@ import java.util.Date;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeliveryOfWagon {
+public class MemoOfDispatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long deliveryId;
+    private Long memoOfDeliveryId;
     private Instant created;
-    private Date startDate;
     private Date endDate;
-    private double cargoWeight;
-    private boolean loadUnloadWork;
-    private double shuntingWorks;
-
-    @ManyToOne( fetch = FetchType.EAGER,
-            cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
-    )
-    private MemoOfDelivery memoOfDelivery;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "operation_id")
     private CargoOperation cargoOperation;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "wagon_id")
-    private Wagon wagon;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")

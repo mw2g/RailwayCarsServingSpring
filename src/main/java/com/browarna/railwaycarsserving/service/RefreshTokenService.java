@@ -18,6 +18,9 @@ public class RefreshTokenService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    private static final String TOKEN_DELETED = "Аутентификация отменена";
+    private static final String TOKEN_WAS_NOT_DELETED = "Аутентификация не найдена";
+
     public RefreshToken generateRefreshToken(String username) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(UUID.randomUUID().toString());
@@ -29,18 +32,21 @@ public class RefreshTokenService {
 
     boolean validateRefreshToken(String token) {
         return refreshTokenRepository.findByToken(token).isPresent();
-//                .orElseThrow(() -> new RailwayCarsServingException("Invalid refresh Token"));
     }
 
-    public void deleteRefreshToken(String token) {
+    public String deleteRefreshToken(String token) {
         if (refreshTokenRepository.findByToken(token).isPresent()) {
             refreshTokenRepository.deleteByToken(token);
+            return TOKEN_DELETED;
         }
+        return TOKEN_WAS_NOT_DELETED;
     }
 
-    public void deleteRefreshTokenById(Long refreshTokenId) {
+    public String deleteRefreshTokenById(Long refreshTokenId) {
         if (refreshTokenRepository.findById(refreshTokenId).isPresent()) {
             refreshTokenRepository.deleteById(refreshTokenId);
+            return TOKEN_DELETED;
         }
+        return TOKEN_WAS_NOT_DELETED;
     }
 }

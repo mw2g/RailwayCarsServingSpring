@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional
-public class AdminService {
+public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;

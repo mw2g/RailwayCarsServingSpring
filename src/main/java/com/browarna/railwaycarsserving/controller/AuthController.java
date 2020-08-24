@@ -6,6 +6,7 @@ import com.browarna.railwaycarsserving.dto.RefreshTokenRequest;
 import com.browarna.railwaycarsserving.service.AuthService;
 import com.browarna.railwaycarsserving.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,13 +34,13 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
-        refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
-        return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!!");
+        String message = refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
+        return ResponseEntity.status(OK).body(message);
     }
 
     @DeleteMapping("/{refreshTokenId}")
-    public ResponseEntity<String> deleteRefreshToken(@PathVariable Long refreshTokenId) {
-        refreshTokenService.deleteRefreshTokenById(refreshTokenId);
-        return ResponseEntity.status(OK).body("Сессия удалена");
+    public String deleteRefreshToken(@PathVariable Long refreshTokenId) {
+        String message = refreshTokenService.deleteRefreshTokenById(refreshTokenId);
+        return new JSONObject().put("message", message).toString();
     }
 }

@@ -8,7 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 //    @Mapping(target = "userId", source = "userDto.userId")
+    @Mapping(target = "userId", ignore = true)
     @Mapping(target = "created", ignore = true)
+    @Mapping(target = "refreshTokens", ignore = true)
     User map(UserDto userDto);
 
 //    @Mapping(target = "auths", expression = "java(user.getRefreshTokens().stream().map(refreshToken -> refreshToken.getCreatedDate()).collect(java.util.stream.Collectors.toList()))")
