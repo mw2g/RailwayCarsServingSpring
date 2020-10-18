@@ -18,6 +18,7 @@ public class UserDto {
     private String firstName;
     private String middleName;
     private String lastName;
+    private String initials;
     private Instant created;
     private boolean enabled;
     private List<String> roles;

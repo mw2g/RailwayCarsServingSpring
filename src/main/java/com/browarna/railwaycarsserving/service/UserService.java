@@ -1,8 +1,10 @@
 package com.browarna.railwaycarsserving.service;
 
+import com.browarna.railwaycarsserving.dto.SignerDto;
 import com.browarna.railwaycarsserving.dto.UserDto;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.mapper.UserMapper;
+import com.browarna.railwaycarsserving.model.Role;
 import com.browarna.railwaycarsserving.model.User;
 import com.browarna.railwaycarsserving.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -11,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,15 +37,16 @@ public class UserService {
     public UserDto getUserById(Long userId) {
 
         User user = userRepository.findById(userId).get();
-        UserDto userDto = userMapper.mapToDto(user);
-        return userDto;
+        return userMapper.mapToDto(user);
     }
 
-    public void createUser(UserDto userDto) {
+    public UserDto createUser(UserDto userDto) {
         User user = userMapper.map(userDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreated(Instant.now());
+        user.setInitials(getInitials(userDto));
         userRepository.save(user);
+        return userMapper.mapToDto(userRepository.save(user));
     }
 
     public void updateUser(UserDto userDto) {
@@ -52,8 +58,19 @@ public class UserService {
         user.setFirstName(userDto.getFirstName());
         user.setMiddleName(userDto.getMiddleName());
         user.setLastName(userDto.getLastName());
+        user.setInitials(getInitials(userDto));
 
-        if (userDto.getPassword() != null && userDto.getPassword() != "") {
+        Set<String> roles = Arrays.stream(Role.values())
+                .map(Role::name)
+                .collect(Collectors.toSet());
+        user.getRoles().clear();
+        for (String key : userDto.getRoles()) {
+            if (roles.contains(key)) {
+                user.getRoles().add(Role.valueOf(key));
+            }
+        }
+
+        if (userDto.getPassword() != null && userDto.getPassword() != "" && !userDto.getPassword().equals(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         }
         userRepository.save(user);
@@ -63,5 +80,11 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find user by userId to delete"));
         userRepository.delete(user);
+    }
+
+    private String getInitials(UserDto userDto) {
+        return userDto.getLastName() + " "
+                + userDto.getFirstName().substring(0, 1) + "."
+                + userDto.getMiddleName().substring(0, 1) + ".";
     }
 }

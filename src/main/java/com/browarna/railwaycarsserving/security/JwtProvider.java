@@ -1,12 +1,12 @@
 package com.browarna.railwaycarsserving.security;
 
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
+import com.browarna.railwaycarsserving.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,7 +17,7 @@ import java.security.cert.CertificateException;
 import java.sql.Date;
 import java.time.Instant;
 
-import static io.jsonwebtoken.Jwts.parser;
+import static io.jsonwebtoken.Jwts.parserBuilder;
 import static java.util.Date.from;
 
 @Slf4j
@@ -68,11 +68,11 @@ public class JwtProvider {
     }
 
     public boolean validateToken(String jwt) {
-        parser().setSigningKey(getPublickey()).parseClaimsJws(jwt);
+        parserBuilder().setSigningKey(getPublicKey()).build().parseClaimsJws(jwt);
         return true;
     }
 
-    private PublicKey getPublickey() {
+    private PublicKey getPublicKey() {
         try {
             return keyStore.getCertificate("rcsauth").getPublicKey();
         } catch (KeyStoreException e) {
@@ -82,8 +82,8 @@ public class JwtProvider {
     }
 
     public String getUsernameFromJwt(String token) {
-        Claims claims = parser()
-                .setSigningKey(getPublickey())
+        Claims claims = parserBuilder()
+                .setSigningKey(getPublicKey()).build()
                 .parseClaimsJws(token)
                 .getBody();
 

@@ -6,9 +6,7 @@ import com.browarna.railwaycarsserving.mapper.CargoOperationMapper;
 import com.browarna.railwaycarsserving.mapper.CustomerMapper;
 import com.browarna.railwaycarsserving.mapper.DeliveryOfWagonMapper;
 import com.browarna.railwaycarsserving.mapper.UserMapper;
-import com.browarna.railwaycarsserving.model.DeliveryOfWagon;
-import com.browarna.railwaycarsserving.model.MemoOfDelivery;
-import com.browarna.railwaycarsserving.model.Wagon;
+import com.browarna.railwaycarsserving.model.*;
 import com.browarna.railwaycarsserving.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,8 +28,12 @@ public class DeliveryOfWagonService {
     private final CustomerMapper customerMapper;
     private final AuthService authService;
     private final WagonRepository wagonRepository;
+    private final WagonTypeRepository wagonTypeRepository;
     private final MemoOfDeliveryRepository memoOfDeliveryRepository;
+    private final MemoOfDispatchRepository memoOfDispatchRepository;
     private final CargoOperationRepository cargoOperationRepository;
+    private final OwnerRepository ownerRepository;
+    private final CargoTypeRepository cargoTypeRepository;
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
 
@@ -45,7 +47,7 @@ public class DeliveryOfWagonService {
 
     public List<DeliveryOfWagonDto> getDeliveryByMemoId(Long memoId) {
 //        MemoOfDelivery memo = memoOfDeliveryRepository.findById(memoId).get();
-        List<DeliveryOfWagon> deliveryOfWagonList = deliveryOfWagonRepository.findAllByMemoOfDelivery_MemoId(memoId);
+        List<DeliveryOfWagon> deliveryOfWagonList = deliveryOfWagonRepository.findAllByMemoOfDelivery_MemoOfDeliveryId(memoId);
         List<DeliveryOfWagonDto> deliveryOfWagonDtoList = deliveryOfWagonList.stream()
                 .map(deliveryOfWagon -> deliveryOfWagonMapper.mapToDto(deliveryOfWagon)).collect(Collectors.toList());
         return deliveryOfWagonDtoList;
@@ -58,49 +60,83 @@ public class DeliveryOfWagonService {
         return deliveryOfWagonDto;
     }
 
-    public void createDeliveryOfWagon(DeliveryOfWagonDto deliveryOfWagonDto) {
+    public DeliveryOfWagonDto createDeliveryOfWagon(DeliveryOfWagonDto deliveryOfWagonDto) {
+        if (deliveryOfWagonRepository.findByWagon_WagonNumberAndStartDate(
+                deliveryOfWagonDto.getWagon().getWagonNumber(),
+                deliveryOfWagonDto.getStartDate()).isPresent()) {
+            return new DeliveryOfWagonDto();
+        }
         DeliveryOfWagon deliveryOfWagon = deliveryOfWagonMapper.map(deliveryOfWagonDto);
         deliveryOfWagon.setCreated(Instant.now());
-        deliveryOfWagon.setWagon(getOrCreateWagon(deliveryOfWagonDto.getWagon().getWagonNumber()));
-        deliveryOfWagon.setCargoOperation(cargoOperationRepository.findById(deliveryOfWagonDto.getCargoOperation().getOperationId()).get());
+        deliveryOfWagon.setWagon(getOrCreateWagon(deliveryOfWagonDto));
+        deliveryOfWagon.setWagonType(wagonTypeRepository
+                .findByTypeName(deliveryOfWagonDto.getWagonType().getTypeName()).get());
+        deliveryOfWagon.setOwner(ownerRepository
+                .findByOwner(deliveryOfWagonDto.getOwner().getOwner()));
+        deliveryOfWagon.setCargoOperation(cargoOperationRepository
+                .findById(deliveryOfWagonDto.getCargoOperation().getOperationId()).get());
         deliveryOfWagon.setAuthor(authService.getCurrentUser());
-        deliveryOfWagon.setCustomer(customerRepository.findByCustomerName(deliveryOfWagonDto.getCustomer().getCustomerName()));
-        if (deliveryOfWagonDto.getMemoOfDelivery() != null && deliveryOfWagonDto.getMemoOfDelivery().getMemoId() != null) {
-            deliveryOfWagon.setMemoOfDelivery(memoOfDeliveryRepository.findById(deliveryOfWagonDto.getMemoOfDelivery().getMemoId()).get());
+        deliveryOfWagon.setCustomer(customerRepository
+                .findByCustomerName(deliveryOfWagonDto.getCustomer().getCustomerName()));
+        deliveryOfWagon.setCargoType(cargoTypeRepository
+                .findByTypeName(deliveryOfWagonDto.getCargoType().getTypeName()));
+        if (deliveryOfWagonDto.getMemoOfDelivery() != null && deliveryOfWagonDto.getMemoOfDelivery().getMemoOfDeliveryId() != null) {
+            deliveryOfWagon.setMemoOfDelivery(memoOfDeliveryRepository.findById(deliveryOfWagonDto.getMemoOfDelivery().getMemoOfDeliveryId()).get());
         }
-        deliveryOfWagonRepository.save(deliveryOfWagon);
+        return deliveryOfWagonMapper.mapToDto(deliveryOfWagonRepository.save(deliveryOfWagon));
     }
 
-    public void updateDeliveryOfWagon(DeliveryOfWagonDto deliveryOfWagonDto) {
+    public DeliveryOfWagonDto updateDeliveryOfWagon(DeliveryOfWagonDto deliveryOfWagonDto) {
         DeliveryOfWagon deliveryOfWagon = deliveryOfWagonRepository.findById(deliveryOfWagonDto.getDeliveryId())
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find DeliveryOfWagon by id to update"));
 
-        deliveryOfWagon.setWagon(getOrCreateWagon(deliveryOfWagon.getWagon().getWagonNumber()));
-        deliveryOfWagon.setCargoOperation(cargoOperationRepository.findById(deliveryOfWagonDto.getCargoOperation().getOperationId()).get());
+        deliveryOfWagon.setWagon(getOrCreateWagon(deliveryOfWagonDto));
+        deliveryOfWagon.setCargoOperation(cargoOperationRepository
+                .findById(deliveryOfWagonDto.getCargoOperation().getOperationId()).get());
+        deliveryOfWagon.setWagonType(wagonTypeRepository
+                .findByTypeName(deliveryOfWagonDto.getWagonType().getTypeName()).get());
+        deliveryOfWagon.setOwner(ownerRepository
+                .findByOwner(deliveryOfWagonDto.getOwner().getOwner()));
         deliveryOfWagon.setCargoWeight(deliveryOfWagonDto.getCargoWeight());
         deliveryOfWagon.setLoadUnloadWork(deliveryOfWagonDto.isLoadUnloadWork());
         deliveryOfWagon.setShuntingWorks(deliveryOfWagonDto.getShuntingWorks());
         deliveryOfWagon.setStartDate(deliveryOfWagonDto.getStartDate());
         deliveryOfWagon.setEndDate(deliveryOfWagonDto.getEndDate());
-        deliveryOfWagon.setCustomer(customerRepository.findByCustomerName(deliveryOfWagonDto.getCustomer().getCustomerName()));
-        if (deliveryOfWagonDto.getMemoOfDelivery().getMemoId() != null) {
-            deliveryOfWagon.setMemoOfDelivery(memoOfDeliveryRepository.findById(deliveryOfWagonDto.getMemoOfDelivery().getMemoId()).get());
+        deliveryOfWagon.setCustomer(customerRepository
+                .findByCustomerName(deliveryOfWagonDto.getCustomer().getCustomerName()));
+        deliveryOfWagon.setCargoType(cargoTypeRepository
+                .findByTypeName(deliveryOfWagonDto.getCargoType().getTypeName()));
+        if (deliveryOfWagonDto.getMemoOfDelivery() != null
+                && deliveryOfWagonDto.getMemoOfDelivery().getMemoOfDeliveryId() != null) {
+            deliveryOfWagon.setMemoOfDelivery(memoOfDeliveryRepository
+                    .findById(deliveryOfWagonDto.getMemoOfDelivery().getMemoOfDeliveryId()).get());
         } else {
             deliveryOfWagon.setMemoOfDelivery(null);
         }
 
-        deliveryOfWagonRepository.save(deliveryOfWagon);
+        if (deliveryOfWagonDto.getMemoOfDispatch() != null
+                && deliveryOfWagonDto.getMemoOfDispatch().getMemoOfDispatchId() != null) {
+            deliveryOfWagon.setMemoOfDispatch(memoOfDispatchRepository
+                    .findById(deliveryOfWagonDto.getMemoOfDispatch().getMemoOfDispatchId()).get());
+        } else {
+            deliveryOfWagon.setMemoOfDispatch(null);
+        }
+        return deliveryOfWagonMapper.mapToDto(deliveryOfWagonRepository.save(deliveryOfWagon));
     }
 
-    private Wagon getOrCreateWagon(String wagonNumber) {
-        if (wagonRepository.findByWagonNumber(wagonNumber).isPresent()) {
-            return wagonRepository.findByWagonNumber(wagonNumber).get();
+    private Wagon getOrCreateWagon(DeliveryOfWagonDto deliveryOfWagonDto) {
+        Wagon wagon;
+        Optional<Wagon> byWagonNumber = wagonRepository.findByWagonNumber(deliveryOfWagonDto.getWagon().getWagonNumber());
+        if (byWagonNumber.isPresent()) {
+            wagon = byWagonNumber.get();
         } else {
-            Wagon wagon = new Wagon();
-            wagon.setWagonNumber(wagonNumber);
-            wagonRepository.save(wagon);
-            return wagon;
+            wagon = new Wagon();
+            wagon.setWagonNumber(deliveryOfWagonDto.getWagon().getWagonNumber());
         }
+        wagon.setWagonType(wagonTypeRepository.findByTypeName(deliveryOfWagonDto.getWagonType().getTypeName()).get());
+        wagon.setOwner(ownerRepository.findByOwner(deliveryOfWagonDto.getOwner().getOwner()));
+        wagonRepository.save(wagon);
+        return wagon;
     }
 
     public void deleteDeliveryOfWagon(Long deliveryId) {
@@ -109,7 +145,18 @@ public class DeliveryOfWagonService {
         deliveryOfWagonRepository.delete(deliveryOfWagon);
     }
 
-    public List<DeliveryOfWagonDto> getSuitableDelivery(Long memoId) {
+    public DeliveryOfWagonDto getDeliveryForAutocomplete(String wagonNumber) {
+        List<DeliveryOfWagon> deliveryOfWagonList = deliveryOfWagonRepository
+                .findAllByWagon_WagonNumber(wagonNumber);
+        if (deliveryOfWagonList.isEmpty()) {
+            return new DeliveryOfWagonDto();
+        }
+        List<DeliveryOfWagonDto> deliveryOfWagonDtoList = deliveryOfWagonList.stream()
+                .map(deliveryOfWagon -> deliveryOfWagonMapper.mapToDto(deliveryOfWagon)).collect(Collectors.toList());
+        return deliveryOfWagonDtoList.get(deliveryOfWagonDtoList.size() - 1);
+    }
+
+    public List<DeliveryOfWagonDto> getSuitableDeliveryForMemoOfDelivery(Long memoId) {
         MemoOfDelivery memo = memoOfDeliveryRepository.findById(memoId).get();
         List<DeliveryOfWagon> deliveryOfWagonList = deliveryOfWagonRepository
                 .findAllByCustomerAndCargoOperationAndStartDateAndMemoOfDelivery(memo.getCustomer(),
@@ -121,15 +168,49 @@ public class DeliveryOfWagonService {
         return deliveryOfWagonDtoList;
     }
 
-    public void addMemoToDelivery(Long deliveryId, Long memoId) {
+    public List<DeliveryOfWagonDto> getSuitableDeliveryForMemoOfDispatch(Long memoId) {
+        MemoOfDispatch memo = memoOfDispatchRepository.findById(memoId).get();
+        List<DeliveryOfWagon> deliveryOfWagonList = deliveryOfWagonRepository
+                .findAllByCustomerAndCargoOperationAndMemoOfDispatch(
+                        memo.getCustomer(),
+                        memo.getCargoOperation(),
+                        null);
+        deliveryOfWagonList = deliveryOfWagonList.stream().filter(delivery -> delivery.getMemoOfDelivery() != null &&
+                (delivery.getEndDate() == null || delivery.getEndDate().equals(memo.getEndDate())))
+                .collect(Collectors.toList());
+        List<DeliveryOfWagonDto> deliveryOfWagonDtoList = deliveryOfWagonList.stream()
+                .map(deliveryOfWagon -> deliveryOfWagonMapper.mapToDto(deliveryOfWagon)).collect(Collectors.toList());
+        return deliveryOfWagonDtoList;
+    }
+
+    public DeliveryOfWagonDto addMemoOfDeliveryToDelivery(Long deliveryId, Long memoId) {
         DeliveryOfWagon delivery = deliveryOfWagonRepository.findById(deliveryId).get();
         delivery.setMemoOfDelivery(memoOfDeliveryRepository.findById(memoId).get());
+        return deliveryOfWagonMapper.mapToDto(deliveryOfWagonRepository.save(delivery));
+
+    }
+
+    public void addMemoOfDispatchToDelivery(Long deliveryId, Long memoId) {
+        DeliveryOfWagon delivery = deliveryOfWagonRepository.findById(deliveryId).get();
+        MemoOfDispatch memoOfDispatch = memoOfDispatchRepository.findById(memoId).get();
+        delivery.setMemoOfDispatch(memoOfDispatch);
+        delivery.setEndDate(memoOfDispatch.getEndDate());
         deliveryOfWagonRepository.save(delivery);
     }
 
-    public void removeMemoToDelivery(Long deliveryId) {
+    public void removeMemoOfDeliveryFromDelivery(Long deliveryId) {
         DeliveryOfWagon delivery = deliveryOfWagonRepository.findById(deliveryId).get();
         delivery.setMemoOfDelivery(null);
         deliveryOfWagonRepository.save(delivery);
+    }
+
+    public void removeMemoOfDispatchFromDelivery(Long deliveryId) {
+        DeliveryOfWagon delivery = deliveryOfWagonRepository.findById(deliveryId).get();
+        delivery.setMemoOfDispatch(null);
+        deliveryOfWagonRepository.save(delivery);
+    }
+
+    public List<Owner> getAllOwners() {
+        return ownerRepository.findAll();
     }
 }

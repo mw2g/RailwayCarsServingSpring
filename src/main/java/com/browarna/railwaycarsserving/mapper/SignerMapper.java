@@ -15,7 +15,7 @@ public abstract class SignerMapper {
 
     @Mapping(target = "initials", ignore = true)
     @Mapping(target = "customer", expression = "java(customerMap(signerDto.getCustomerId()))")
-    @Mapping(target = "memoOfDeliveryList", ignore = true)
+//    @Mapping(target = "memoOfDeliveryList", ignore = true)
     public abstract Signer map(SignerDto signerDto);
 
     @Mapping(target = "customerId", expression = "java(signer.getCustomer().getCustomerId())")

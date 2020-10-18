@@ -21,15 +21,16 @@ public abstract class MemoOfDeliveryMapper {
     @Autowired
     private CustomerMapper customerMapper;
 
-    @Mapping(target = "memoId", ignore = true)
+    @Mapping(target = "memoOfDeliveryId", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "author", ignore = true)
-    @Mapping(target = "cargoOperation", ignore = true)
     @Mapping(target = "customer", ignore = true)
     @Mapping(target = "deliveryOfWagonList", ignore = true)
     @Mapping(target = "signer", ignore = true)
+//    @Mapping(target = "cargoOperation", source = "cargoOperation")
     public abstract MemoOfDelivery map(MemoOfDeliveryDto memoOfDeliveryDto);
 
+//    @Mapping(target = "cargoOperation", source = "cargoOperation")
     @Mapping(target = "deliveryOfWagonList", expression = "java(mapToDtoDeliveryOfWagonList(memoOfDelivery))")
     @Mapping(target = "signer", expression = "java(mapToDtoSigner(memoOfDelivery))")
     @Mapping(target = "customer", expression = "java(mapToDtoCustomer(memoOfDelivery))")
@@ -38,7 +39,7 @@ public abstract class MemoOfDeliveryMapper {
 
     String getName(MemoOfDelivery memoOfDelivery) {
 
-        return memoOfDelivery.getAuthor().getLastName();
+        return memoOfDelivery.getAuthor().getInitials();
     }
 
     List<DeliveryOfWagonDto> mapToDtoDeliveryOfWagonList(MemoOfDelivery memoOfDelivery) {

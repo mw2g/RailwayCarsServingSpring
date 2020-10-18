@@ -1,11 +1,9 @@
 package com.browarna.railwaycarsserving.config;
 
-import com.browarna.railwaycarsserving.security.CustomAuthenticationEntryPoint;
 import com.browarna.railwaycarsserving.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
@@ -36,14 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**")
-                .permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/subreddit")
-//                .permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/posts/")
-//                .permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/posts/**")
-//                .permitAll()
+//                .antMatchers("/api/**").hasRole("USER")
+                .antMatchers("/api/memo/**").hasRole("USER")
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
@@ -52,13 +45,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**")
                 .permitAll()
                 .anyRequest()
-                .authenticated();
+                .authenticated()
+                .and()
+                .exceptionHandling().accessDeniedPage("/access-denied");
 //            .and()
 //                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
 
-
         httpSecurity.addFilterBefore(jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class);
+
+//        // For ADMIN only.
+//        http.authorizeRequests().antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
     }
 
     @Autowired

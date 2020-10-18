@@ -34,20 +34,17 @@ public class MemoOfDeliveryController {
     public ResponseEntity<MemoOfDeliveryDto> createMemoOfDelivery(@RequestBody MemoOfDeliveryDto memoOfDeliveryDto) {
     return ResponseEntity.status(OK)
                 .body(memoOfDeliveryService.createMemoOfDelivery(memoOfDeliveryDto));
-
-        //        return new JSONObject().put("message", "Пользователь создан")
-//                                .put("memoId", memoId).toString();
     }
 
     @PutMapping
-    public String updateMemoOfDelivery(@RequestBody MemoOfDeliveryDto memoOfDeliveryDto) {
-        memoOfDeliveryService.updateMemoOfDelivery(memoOfDeliveryDto);
-        return new JSONObject().put("message", "Изменения сохранены").toString();
+    public ResponseEntity<MemoOfDeliveryDto> updateMemoOfDelivery(@RequestBody MemoOfDeliveryDto memoOfDeliveryDto) {
+        return ResponseEntity.status(OK)
+                .body(memoOfDeliveryService.updateMemoOfDelivery(memoOfDeliveryDto));
     }
 
     @DeleteMapping("/{id}")
     public String deleteMemoOfDelivery(@PathVariable Long id) {
         memoOfDeliveryService.deleteMemoOfDelivery(id);
-        return new JSONObject().put("message", "Пользователь удален").toString();
+        return new JSONObject().put("message", "Памятка подачи удалена").toString();
     }
 }

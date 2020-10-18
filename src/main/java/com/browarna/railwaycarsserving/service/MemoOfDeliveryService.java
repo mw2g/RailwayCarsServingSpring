@@ -1,8 +1,10 @@
 package com.browarna.railwaycarsserving.service;
 
+import com.browarna.railwaycarsserving.dto.DeliveryOfWagonDto;
 import com.browarna.railwaycarsserving.dto.MemoOfDeliveryDto;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.mapper.MemoOfDeliveryMapper;
+import com.browarna.railwaycarsserving.model.CargoOperation;
 import com.browarna.railwaycarsserving.model.DeliveryOfWagon;
 import com.browarna.railwaycarsserving.model.MemoOfDelivery;
 import com.browarna.railwaycarsserving.repository.*;
@@ -45,23 +47,36 @@ public class MemoOfDeliveryService {
         MemoOfDelivery memoOfDelivery = memoOfDeliveryMapper.map(memoOfDeliveryDto);
         memoOfDelivery.setCreated(Instant.now());
         memoOfDelivery.setAuthor(authService.getCurrentUser());
-        memoOfDelivery.setCargoOperation(cargoOperationRepository.findById(memoOfDeliveryDto.getCargoOperation().getOperationId()).get());
+        memoOfDelivery.setCargoOperation(cargoOperationRepository.findByOperation(memoOfDeliveryDto.getCargoOperation().getOperation()));
         memoOfDelivery.setCustomer(customerRepository.findByCustomerName(memoOfDeliveryDto.getCustomer().getCustomerName()));
         memoOfDelivery.setComment(memoOfDeliveryDto.getComment());
         return memoOfDeliveryMapper.mapToDto(memoOfDeliveryRepository.save(memoOfDelivery));
     }
 
-    public void updateMemoOfDelivery(MemoOfDeliveryDto memoOfDeliveryDto) {
-        MemoOfDelivery memoOfDelivery = memoOfDeliveryRepository.findById(memoOfDeliveryDto.getMemoId())
+    public MemoOfDeliveryDto updateMemoOfDelivery(MemoOfDeliveryDto memoOfDeliveryDto) {
+        MemoOfDelivery memoOfDelivery = memoOfDeliveryRepository.findById(memoOfDeliveryDto.getMemoOfDeliveryId())
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find memoOfDelivery by id to update"));
-        memoOfDelivery.setCargoOperation(cargoOperationRepository
-                .findById(memoOfDeliveryDto.getCargoOperation().getOperationId()).get());
+        CargoOperation cargoOperation = cargoOperationRepository
+                .findByOperation(memoOfDeliveryDto.getCargoOperation().getOperation());
+        memoOfDelivery.setCargoOperation(cargoOperation);
         memoOfDelivery.setCustomer(customerRepository
                 .findByCustomerName(memoOfDeliveryDto.getCustomer().getCustomerName()));
         memoOfDelivery.setStartDate(memoOfDeliveryDto.getStartDate());
         memoOfDelivery.setComment(memoOfDeliveryDto.getComment());
         memoOfDelivery.setSigner(signerRepository.findByInitials(memoOfDeliveryDto.getSigner().getInitials()));
-        memoOfDeliveryRepository.save(memoOfDelivery);
+
+        for (DeliveryOfWagonDto delivery : memoOfDeliveryDto.getDeliveryOfWagonList()) {
+            DeliveryOfWagon deliveryOfWagonById = deliveryOfWagonRepository.findById(delivery.getDeliveryId()).get();
+            deliveryOfWagonById.setStartDate(memoOfDelivery.getStartDate());
+            deliveryOfWagonById.setCustomer(memoOfDelivery.getCustomer());
+            deliveryOfWagonById.setCargoOperation(memoOfDelivery.getCargoOperation());
+            if (cargoOperation.getOperation() != "ВЫГРУЗКА") {
+                deliveryOfWagonById.setLoadUnloadWork(false);
+            }
+            deliveryOfWagonRepository.save(deliveryOfWagonById);
+        }
+
+        return memoOfDeliveryMapper.mapToDto(memoOfDeliveryRepository.save(memoOfDelivery));
     }
 
     public void deleteMemoOfDelivery(Long memoOfDeliveryId) {
@@ -73,5 +88,8 @@ public class MemoOfDeliveryService {
             deliveryOfWagonRepository.save(delivery);
         }
         memoOfDeliveryRepository.delete(memoOfDelivery);
+        for (DeliveryOfWagon delivery : memoOfDelivery.getDeliveryOfWagonList()) {
+            deliveryOfWagonRepository.delete(delivery);
+        }
     }
 }

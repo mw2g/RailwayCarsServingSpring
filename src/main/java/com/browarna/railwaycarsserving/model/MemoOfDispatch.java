@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -15,11 +16,28 @@ import java.util.Date;
 public class MemoOfDispatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memoOfDeliveryId;
+    private Long memoOfDispatchId;
+
     private Instant created;
     private Date endDate;
+    private String comment;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
+
+    @OneToMany( mappedBy = "memoOfDispatch",
+            fetch = FetchType.LAZY,
+            cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
+    )
+    private List<DeliveryOfWagon> deliveryOfWagonList;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "statementId")
+    private ControllerStatement controllerStatement;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "operation_id")
     private CargoOperation cargoOperation;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -27,6 +45,15 @@ public class MemoOfDispatch {
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User author;
+    @JoinColumn(name = "signer_id")
+    private Signer signer;
+
+    @Override
+    public String toString() {
+        return "Memo of dispatch{" +
+                "id=" + memoOfDispatchId +
+                ", createdDate=" + created +
+                ", endDate='" + endDate +
+                '}';
+    }
 }

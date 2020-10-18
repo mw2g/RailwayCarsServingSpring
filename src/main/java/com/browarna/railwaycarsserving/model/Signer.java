@@ -26,9 +26,9 @@ public class Signer {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany( mappedBy = "signer",
-            fetch = FetchType.LAZY,
-            cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
-    )
-    private List<MemoOfDelivery> memoOfDeliveryList;
+//    @OneToMany( mappedBy = "signer",
+//            fetch = FetchType.LAZY,
+//            cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
+//    )
+//    private List<MemoOfDelivery> memoOfDeliveryList;
 }

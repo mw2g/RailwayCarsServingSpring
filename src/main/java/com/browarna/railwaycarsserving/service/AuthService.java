@@ -29,7 +29,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public User getCurrentUser() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+        User principal = (User) SecurityContextHolder.
                 getContext().getAuthentication().getPrincipal();
         return userRepository.findByUsername(principal.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
@@ -60,7 +60,6 @@ public class AuthService {
 
         }
         return AuthenticationResponse.builder()
-//                .authenticationToken("kickedOut")
                 .refreshToken("kickedOut")
                 .build();
     }

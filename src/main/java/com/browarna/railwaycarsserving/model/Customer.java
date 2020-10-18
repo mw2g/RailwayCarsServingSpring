@@ -26,16 +26,25 @@ public class Customer {
     private User author;
 
     @OneToMany( mappedBy = "customer",
-            fetch = FetchType.EAGER,
-            cascade = { CascadeType.ALL}
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
     )
     private List<Signer> signerList;
 
-    public void add(Signer tempSignerList) {
-        if (signerList == null) {
-            signerList = new ArrayList<>();
-        }
-        signerList.add(tempSignerList);
-        tempSignerList.setCustomer(this);
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + customerId +
+                ", name=" + customerName +
+                ", fullName='" + customerFullName +
+                '}';
     }
+
+//    public void add(Signer tempSignerList) {
+//        if (signerList == null) {
+//            signerList = new ArrayList<>();
+//        }
+//        signerList.add(tempSignerList);
+//        tempSignerList.setCustomer(this);
+//    }
 }

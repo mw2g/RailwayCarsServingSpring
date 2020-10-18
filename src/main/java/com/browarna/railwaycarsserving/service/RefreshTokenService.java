@@ -18,8 +18,8 @@ public class RefreshTokenService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private static final String TOKEN_DELETED = "Аутентификация отменена";
-    private static final String TOKEN_WAS_NOT_DELETED = "Аутентификация не найдена";
+    private static final String TOKEN_DELETED = "Refresh token deleted";
+    private static final String TOKEN_WAS_NOT_DELETED = "Refresh token was not found";
 
     public RefreshToken generateRefreshToken(String username) {
         RefreshToken refreshToken = new RefreshToken();

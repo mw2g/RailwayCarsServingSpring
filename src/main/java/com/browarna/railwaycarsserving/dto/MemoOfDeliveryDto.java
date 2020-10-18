@@ -1,6 +1,5 @@
 package com.browarna.railwaycarsserving.dto;
 
-import com.browarna.railwaycarsserving.model.CargoOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,10 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemoOfDeliveryDto {
-    private Long memoId;
+    private Long memoOfDeliveryId;
     private Instant created;
     private Date startDate;
-    private CargoOperation cargoOperation;
+    private CargoOperationDto cargoOperation;
     private CustomerDto customer;
     private SignerDto signer;
     private String comment;

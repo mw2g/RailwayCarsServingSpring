@@ -16,9 +16,11 @@ import java.util.List;
 public class MemoOfDelivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memoId;
+    private Long memoOfDeliveryId;
+
     private Instant created;
     private Date startDate;
+    private String comment;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -26,7 +28,7 @@ public class MemoOfDelivery {
 
     @OneToMany( mappedBy = "memoOfDelivery",
             fetch = FetchType.LAZY,
-            cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
+            cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }
     )
     private List<DeliveryOfWagon> deliveryOfWagonList;
 
@@ -41,5 +43,13 @@ public class MemoOfDelivery {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "signer_id")
     private Signer signer;
-    private String comment;
+
+    @Override
+    public String toString() {
+        return "Memo of delivery{" +
+                "id=" + memoOfDeliveryId +
+                ", createdDate=" + created +
+                ", startDate='" + startDate +
+                '}';
+    }
 }

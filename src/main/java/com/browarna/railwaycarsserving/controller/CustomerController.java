@@ -32,9 +32,9 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto CustomerDto) {
+    public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
         return ResponseEntity.status(OK)
-                .body(customerService.createCustomer(CustomerDto));
+                .body(customerService.createCustomer(customerDto));
     }
 
     @PutMapping
@@ -49,15 +49,21 @@ public class CustomerController {
         return new JSONObject().put("message", "Общая подача удалена").toString();
     }
 
+    @DeleteMapping("/signer/{id}")
+    public String deleteSigner(@PathVariable Long id) {
+        customerService.deleteSigner(id);
+        return new JSONObject().put("message", "Подписант удален").toString();
+    }
+
     @PostMapping("/signer")
-    public String createSigner(@RequestBody SignerDto signerDto) {
-        customerService.createSigner(signerDto);
-        return new JSONObject().put("message", "Подписант добавлен").toString();
+    public ResponseEntity<SignerDto> createSigner(@RequestBody SignerDto signerDto) {
+        return ResponseEntity.status(OK)
+                .body(customerService.createSigner(signerDto));
     }
 
     @PutMapping("/signer")
-    public String updateSigner(@RequestBody SignerDto signerDto) {
-        customerService.updateSigner(signerDto);
-        return new JSONObject().put("message", "Изменения сохранены").toString();
+    public ResponseEntity<SignerDto> updateSigner(@RequestBody SignerDto signerDto) {
+        return ResponseEntity.status(OK)
+                .body(customerService.updateSigner(signerDto));
     }
 }

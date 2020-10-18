@@ -29,7 +29,7 @@ public abstract class CustomerMapper {
 
     String getName(Customer customer) {
         if (customer.getAuthor() != null) {
-        return customer.getAuthor().getLastName();
+        return customer.getAuthor().getInitials();
         }
         return "";
     }

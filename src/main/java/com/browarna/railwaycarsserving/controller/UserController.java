@@ -31,9 +31,9 @@ public class UserController {
     }
 
     @PostMapping
-    public String createUser(@RequestBody UserDto userDto) {
-        userService.createUser(userDto);
-        return new JSONObject().put("message", "Пользователь создан").toString();
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+        return ResponseEntity.status(OK)
+                .body(userService.createUser(userDto));
     }
 
     @PutMapping

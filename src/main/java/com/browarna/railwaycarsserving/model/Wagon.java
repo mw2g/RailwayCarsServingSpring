@@ -17,4 +17,12 @@ public class Wagon {
     private Long wagonId;
     @Column(nullable = false)
     private String wagonNumber;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_id")
+    private WagonType wagonType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
+    private Owner owner;
 }
