@@ -26,5 +26,6 @@ public interface DeliveryOfWagonRepository extends JpaRepository<DeliveryOfWagon
 
     Optional<DeliveryOfWagon> findByWagon_WagonNumberAndStartDate(String wagonNumber, Date startDate);
 
-    List<DeliveryOfWagon> findAllByWagon_WagonNumber(String wagonNumber);
+    Optional<DeliveryOfWagon> findFirstByWagon_WagonNumberOrderByCreatedDesc(String wagonNumber);
+
 }

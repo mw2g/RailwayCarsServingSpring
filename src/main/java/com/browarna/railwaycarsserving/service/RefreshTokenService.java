@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -24,7 +25,7 @@ public class RefreshTokenService {
     public RefreshToken generateRefreshToken(String username) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(UUID.randomUUID().toString());
-        refreshToken.setCreatedDate(Instant.now());
+        refreshToken.setCreatedDate(new Date());
         refreshToken.setUser(userRepository.findByUsername(username).get());
 
         return refreshTokenRepository.save(refreshToken);

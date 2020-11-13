@@ -43,7 +43,7 @@ public class BaseRateService {
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find base rate by rateId to update"));
         rate.setRelevanceDate(baseRate.getRelevanceDate());
         rate.setHours(baseRate.getHours());
-        rate.setWagonGroup(baseRate.getWagonGroup());
+        rate.setWagonGroup(wagonGroupRepository.findByGroupName(baseRate.getWagonGroup().getGroupName()).get());
         rate.setRate(baseRate.getRate());
         baseRateRepository.save(rate);
     }

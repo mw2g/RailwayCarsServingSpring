@@ -5,5 +5,5 @@ import com.browarna.railwaycarsserving.model.Wagon;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CargoOperationRepository extends JpaRepository<CargoOperation, Long> {
-    CargoOperation findByOperation(String operation);
+    CargoOperation findByOperationName(String operationName);
 }

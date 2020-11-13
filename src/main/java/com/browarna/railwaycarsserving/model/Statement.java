@@ -13,19 +13,19 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class ControllerStatement {
+public class Statement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long statementId;
 
-    private Instant created;
+    private Date created;
     private String comment;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
 
-    @OneToMany( mappedBy = "controllerStatement",
+    @OneToMany( mappedBy = "statement",
             fetch = FetchType.LAZY,
             cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }
     )

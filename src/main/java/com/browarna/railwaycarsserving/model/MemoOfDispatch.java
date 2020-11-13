@@ -18,7 +18,7 @@ public class MemoOfDispatch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memoOfDispatchId;
 
-    private Instant created;
+    private Date created;
     private Date endDate;
     private String comment;
 
@@ -34,7 +34,7 @@ public class MemoOfDispatch {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "statementId")
-    private ControllerStatement controllerStatement;
+    private Statement statement;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "operation_id")

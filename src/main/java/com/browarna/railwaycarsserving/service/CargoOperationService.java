@@ -28,14 +28,14 @@ public class CargoOperationService {
 
     public CargoOperation create(CargoOperation cargoOperation) {
         CargoOperation operation = new CargoOperation();
-        operation.setOperation(cargoOperation.getOperation());
+        operation.setOperationName(cargoOperation.getOperationName());
         return cargoOperationRepository.save(operation);
     }
 
     public void update(CargoOperation cargoOperation) {
         CargoOperation operation = cargoOperationRepository.findById(cargoOperation.getOperationId())
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find wagon operation by operationId to update"));
-        operation.setOperation(cargoOperation.getOperation());
+        operation.setOperationName(cargoOperation.getOperationName());
         cargoOperationRepository.save(operation);
     }
 

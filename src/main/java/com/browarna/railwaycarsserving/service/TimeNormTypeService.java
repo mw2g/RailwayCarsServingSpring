@@ -29,14 +29,16 @@ public class TimeNormTypeService {
 
     public TimeNormType createTimeNormType(TimeNormType timeNormType) {
         TimeNormType type = new TimeNormType();
-        type.setType(timeNormType.getType());
+        type.setTypeName(timeNormType.getTypeName());
+        type.setTypeCode(timeNormType.getTypeCode());
         return timeNormTypeRepository.save(type);
     }
 
     public void updateTimeNormType(TimeNormType timeNormType) {
         TimeNormType type = timeNormTypeRepository.findById(timeNormType.getTypeId())
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find timeNorm type by typeId to update"));
-        type.setType(timeNormType.getType());
+        type.setTypeName(timeNormType.getTypeName());
+        type.setTypeCode(timeNormType.getTypeCode());
         timeNormTypeRepository.save(type);
     }
 

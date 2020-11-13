@@ -17,5 +17,5 @@ public class Owner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ownerId;
-    private String owner;
+    private String ownerName;
 }

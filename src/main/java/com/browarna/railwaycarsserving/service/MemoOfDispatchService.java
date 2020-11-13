@@ -3,7 +3,7 @@ package com.browarna.railwaycarsserving.service;
 import com.browarna.railwaycarsserving.dto.MemoOfDispatchDto;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.mapper.MemoOfDispatchMapper;
-import com.browarna.railwaycarsserving.model.ControllerStatement;
+import com.browarna.railwaycarsserving.model.Statement;
 import com.browarna.railwaycarsserving.model.DeliveryOfWagon;
 import com.browarna.railwaycarsserving.model.MemoOfDispatch;
 import com.browarna.railwaycarsserving.repository.*;
@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class MemoOfDispatchService {
     private final MemoOfDispatchRepository memoOfDispatchRepository;
-    private final ControllerStatementRepository controllerStatementRepository;
+    private final StatementRepository statementRepository;
     private final MemoOfDispatchMapper memoOfDispatchMapper;
     private final AuthService authService;
     private final CargoOperationRepository cargoOperationRepository;
@@ -45,9 +45,9 @@ public class MemoOfDispatchService {
 
     public MemoOfDispatchDto create(MemoOfDispatchDto memoOfDispatchDto) {
         MemoOfDispatch memoOfDispatch = memoOfDispatchMapper.map(memoOfDispatchDto);
-        memoOfDispatch.setCreated(Instant.now());
+        memoOfDispatch.setCreated(new Date());
         memoOfDispatch.setAuthor(authService.getCurrentUser());
-        memoOfDispatch.setCargoOperation(cargoOperationRepository.findByOperation(memoOfDispatchDto.getCargoOperation().getOperation()));
+        memoOfDispatch.setCargoOperation(cargoOperationRepository.findByOperationName(memoOfDispatchDto.getCargoOperation()));
         memoOfDispatch.setCustomer(customerRepository.findByCustomerName(memoOfDispatchDto.getCustomer().getCustomerName()));
         memoOfDispatch.setComment(memoOfDispatchDto.getComment());
         return memoOfDispatchMapper.mapToDto(memoOfDispatchRepository.save(memoOfDispatch));
@@ -57,13 +57,23 @@ public class MemoOfDispatchService {
         MemoOfDispatch memoOfDispatch = memoOfDispatchRepository.findById(memoOfDispatchDto.getMemoOfDispatchId())
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find memoOfDispatch by id to update"));
         memoOfDispatch.setCargoOperation(cargoOperationRepository
-                .findByOperation(memoOfDispatchDto.getCargoOperation().getOperation()));
+                .findByOperationName(memoOfDispatchDto.getCargoOperation()));
         memoOfDispatch.setCustomer(customerRepository
                 .findByCustomerName(memoOfDispatchDto.getCustomer().getCustomerName()));
         memoOfDispatch.setCreated(memoOfDispatchDto.getCreated());
         memoOfDispatch.setEndDate(memoOfDispatchDto.getEndDate());
         memoOfDispatch.setComment(memoOfDispatchDto.getComment());
-        memoOfDispatch.setSigner(signerRepository.findByInitials(memoOfDispatchDto.getSigner().getInitials()));
+        memoOfDispatch.setSigner(signerRepository.findByInitials(memoOfDispatchDto.getSigner()));
+
+//        Statement statement = new Statement();
+        if (memoOfDispatchDto.getStatement() != null) {
+            Statement statement = statementRepository.findById(memoOfDispatchDto.getStatement())
+                    .orElseThrow(() -> new RailwayCarsServingException("Can`t find statement by id to update"));
+            memoOfDispatch.setStatement(statement);
+        } else{
+            memoOfDispatch.setStatement(null);
+        }
+
         memoOfDispatchRepository.save(memoOfDispatch);
 
         List<DeliveryOfWagon> deliveryList = deliveryOfWagonRepository
@@ -88,10 +98,10 @@ public class MemoOfDispatchService {
         memoOfDispatchRepository.delete(memoOfDispatch);
     }
 
-    public List<MemoOfDispatchDto> getSuitableMemoForControllerStatement(Long statementId) {
-        ControllerStatement statement = controllerStatementRepository.findById(statementId).get();
+    public List<MemoOfDispatchDto> getSuitableMemoForStatement(Long statementId) {
+        Statement statement = statementRepository.findById(statementId).get();
         List<MemoOfDispatch> memoOfDispatchList = memoOfDispatchRepository
-                .findAllByCustomerAndCargoOperationAndControllerStatement(
+                .findAllByCustomerAndCargoOperationAndStatement(
                         statement.getCustomer(),
                         statement.getCargoOperation(),
                         null);
@@ -100,16 +110,16 @@ public class MemoOfDispatchService {
         return memoOfDispatchDtoList;
     }
 
-    public void addControllerStatementToMemoOfDispatch(Long memoIdToAdd, Long statementId) {
+    public void addStatementToMemoOfDispatch(Long memoIdToAdd, Long statementId) {
         MemoOfDispatch memo = memoOfDispatchRepository.findById(memoIdToAdd).get();
-        ControllerStatement statement = controllerStatementRepository.findById(statementId).get();
-        memo.setControllerStatement(statement);
+        Statement statement = statementRepository.findById(statementId).get();
+        memo.setStatement(statement);
         memoOfDispatchRepository.save(memo);
     }
 
-    public void removeControllerStatementFromMemo(Long memoId) {
+    public void removeStatementFromMemo(Long memoId) {
         MemoOfDispatch memo = memoOfDispatchRepository.findById(memoId).get();
-        memo.setControllerStatement(null);
+        memo.setStatement(null);
         memoOfDispatchRepository.save(memo);
     }
 }

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.Instant;
 
 @Data
 @Entity
@@ -15,14 +14,6 @@ public class Wagon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long wagonId;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String wagonNumber;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "type_id")
-    private WagonType wagonType;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id")
-    private Owner owner;
 }

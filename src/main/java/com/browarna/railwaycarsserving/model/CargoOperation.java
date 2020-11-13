@@ -17,5 +17,5 @@ public class CargoOperation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long operationId;
-    private String operation;
+    private String operationName;
 }

@@ -16,7 +16,7 @@ public class DeliveryOfWagon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deliveryId;
-    private Instant created;
+    private Date created;
     private Date startDate;
     private Date endDate;
     private double cargoWeight;

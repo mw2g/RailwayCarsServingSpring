@@ -5,18 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ControllerStatementDto {
+public class StatementDto {
     private Long statementId;
-    private Instant created;
+    private Date created;
     private String comment;
     private String author;
     private List<MemoOfDispatchDto> memoOfDispatchList;
-    private CargoOperationDto cargoOperation;
-    private CustomerDto customer;
-    private SignerDto signer;
+    private String cargoOperation;
+    private String customer;
+    private String signer;
 }

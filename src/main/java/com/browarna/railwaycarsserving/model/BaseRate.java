@@ -18,7 +18,7 @@ public class BaseRate {
     @Column(nullable = false)
     private Date relevanceDate;
     @Column(nullable = false)
-    private Integer hours;
+    private Long hours;
     @Column(nullable = false)
     private Double rate;
 

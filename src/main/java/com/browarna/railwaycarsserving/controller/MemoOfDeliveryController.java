@@ -21,7 +21,7 @@ public class MemoOfDeliveryController {
     @GetMapping
     public ResponseEntity<List<MemoOfDeliveryDto>> getAllMemoOfDeliverys() {
         return ResponseEntity.status(OK)
-                .body(memoOfDeliveryService.getAllMemoOfDeliverys());
+                .body(memoOfDeliveryService.getAllMemoOfDeliveries());
     }
 
     @GetMapping("/{id}")

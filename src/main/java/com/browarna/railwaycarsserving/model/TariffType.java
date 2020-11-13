@@ -14,6 +14,8 @@ public class TariffType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long typeId;
-    @Column(nullable = false)
-    private String type;
+    @Column(nullable = false, unique = true)
+    private String typeName;
+    @Column(nullable = false, unique = true)
+    private String typeCode;
 }

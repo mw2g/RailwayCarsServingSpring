@@ -13,12 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 public class MemoOfDispatchDto {
     private Long memoOfDispatchId;
-    private Instant created;
+    private Date created;
     private Date endDate;
     private String comment;
     private String author;
     private List<DeliveryOfWagonDto> deliveryOfWagonList;
-    private CargoOperationDto cargoOperation;
+    private String cargoOperation;
     private CustomerDto customer;
-    private SignerDto signer;
+    private String signer;
+    private Long statement;
 }

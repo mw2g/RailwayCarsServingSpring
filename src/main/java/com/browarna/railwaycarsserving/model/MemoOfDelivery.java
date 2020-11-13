@@ -18,7 +18,7 @@ public class MemoOfDelivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memoOfDeliveryId;
 
-    private Instant created;
+    private Date created;
     private Date startDate;
     private String comment;
 

@@ -53,36 +53,36 @@ public class MemoOfDispatchController {
 
     @GetMapping("/suitable/{statementId}")
     public ResponseEntity<List<MemoOfDispatchDto>> getSuitableMemoForStatement(@PathVariable Long statementId) {
-        return ResponseEntity.status(OK).body(memoOfDispatchService.getSuitableMemoForControllerStatement(statementId));
+        return ResponseEntity.status(OK).body(memoOfDispatchService.getSuitableMemoForStatement(statementId));
     }
 
-    @GetMapping("/add-controller-statement")
-    public String addControllerStatementToMemoOfDispatch(
+    @GetMapping("/add-statement")
+    public String addStatementToMemoOfDispatch(
             @Param("memoIdToAdd") Long memoIdToAdd, @Param("statementId") Long statementId) {
-        memoOfDispatchService.addControllerStatementToMemoOfDispatch(memoIdToAdd, statementId);
+        memoOfDispatchService.addStatementToMemoOfDispatch(memoIdToAdd, statementId);
         return new JSONObject().put("message", "В памятку уборки добавлена ведомость").toString();
     }
 
-    @PostMapping("/add-controller-statement-list")
-    public String addControllerStatementToMemoOfDispatchList(
+    @PostMapping("/add-statement-list")
+    public String addStatementToMemoOfDispatchList(
             @RequestBody MemoIdListAndStatementIdDto body) {
         List<MemoOfDispatchDto> memoOfDispatchDtoList = new ArrayList<>();
         for (Long memoId : body.getMemoIds()) {
-            memoOfDispatchService.addControllerStatementToMemoOfDispatch(memoId, body.getStatementId());
+            memoOfDispatchService.addStatementToMemoOfDispatch(memoId, body.getStatementId());
         }
         return new JSONObject().put("message", "Во все памятки добавлена ведомость").toString();
     }
 
-    @GetMapping("/remove-controller-statement")
-    public String removeControllerStatementFromMemo(@Param("memoId") Long memoId) {
-        memoOfDispatchService.removeControllerStatementFromMemo(memoId);
+    @GetMapping("/remove-statement")
+    public String removeStatementFromMemo(@Param("memoId") Long memoId) {
+        memoOfDispatchService.removeStatementFromMemo(memoId);
         return new JSONObject().put("message", "Ведомость из памятки удалена").toString();
     }
 
-    @PostMapping("/remove-controller-statement-list")
-    public String removeControllerStatementFromMemoList(@RequestBody Long[] memoIds) {
+    @PostMapping("/remove-statement-list")
+    public String removeStatementFromMemoList(@RequestBody Long[] memoIds) {
         for (Long memoId : memoIds) {
-            memoOfDispatchService.removeControllerStatementFromMemo(memoId);
+            memoOfDispatchService.removeStatementFromMemo(memoId);
         }
         return new JSONObject().put("message", "Ведомость удалена из всех памяток").toString();
     }

@@ -27,14 +27,16 @@ public class TariffTypeService {
 
     public TariffType createTariffType(TariffType tariffType) {
         TariffType type = new TariffType();
-        type.setType(tariffType.getType());
+        type.setTypeName(tariffType.getTypeName());
+        type.setTypeCode(tariffType.getTypeCode());
         return tariffTypeRepository.save(type);
     }
 
     public void updateTariffType(TariffType tariffType) {
         TariffType type = tariffTypeRepository.findById(tariffType.getTypeId())
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find tariff type by typeId to update"));
-        type.setType(tariffType.getType());
+        type.setTypeName(tariffType.getTypeName());
+        type.setTypeCode(tariffType.getTypeCode());
         tariffTypeRepository.save(type);
     }
 

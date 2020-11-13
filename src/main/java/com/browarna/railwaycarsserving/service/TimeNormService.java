@@ -2,18 +2,22 @@ package com.browarna.railwaycarsserving.service;
 
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.model.TimeNorm;
+import com.browarna.railwaycarsserving.model.TimeNormType;
 import com.browarna.railwaycarsserving.repository.TimeNormRepository;
+import com.browarna.railwaycarsserving.repository.TimeNormTypeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 @Transactional
 public class TimeNormService {
     private final TimeNormRepository timeNormRepository;
+    private final TimeNormTypeRepository timeNormTypeRepository;
 
     public List<TimeNorm> getAllTimeNorm() {
         return timeNormRepository.findAll();
@@ -28,6 +32,9 @@ public class TimeNormService {
     public TimeNorm createTimeNorm(TimeNorm timeNorm) {
         TimeNorm newTimeNorm = new TimeNorm();
         newTimeNorm.setNorm(timeNorm.getNorm());
+        newTimeNorm.setRelevanceDate(timeNorm.getRelevanceDate());
+        TimeNormType timeNormType = timeNormTypeRepository.findByTypeName(timeNorm.getNormType().getTypeName()).get();
+        newTimeNorm.setNormType(timeNormType);
         return timeNormRepository.save(newTimeNorm);
     }
 
@@ -35,6 +42,9 @@ public class TimeNormService {
         TimeNorm timeNormById = timeNormRepository.findById(timeNorm.getNormId())
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find timeNorm by normId to update"));
         timeNormById.setNorm(timeNorm.getNorm());
+        timeNormById.setRelevanceDate(timeNorm.getRelevanceDate());
+        TimeNormType timeNormType = timeNormTypeRepository.findByTypeName(timeNorm.getNormType().getTypeName()).get();
+        timeNormById.setNormType(timeNormType);
         timeNormRepository.save(timeNormById);
     }
 

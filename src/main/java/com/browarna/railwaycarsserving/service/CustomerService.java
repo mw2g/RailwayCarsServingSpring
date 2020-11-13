@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class CustomerService {
 
     public CustomerDto createCustomer(CustomerDto customerDto) {
         Customer customer = customerMapper.map(customerDto);
-        customer.setCreated(Instant.now());
+        customer.setCreated(new Date());
         customer.setAuthor(authService.getCurrentUser());
         return customerMapper.mapToDto(customerRepository.save(customer));
     }

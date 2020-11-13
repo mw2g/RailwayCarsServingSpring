@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @Entity
@@ -16,7 +17,7 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String token;
-    private Instant createdDate;
+    private Date createdDate;
 
 
     @ManyToOne( fetch = FetchType.EAGER,

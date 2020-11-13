@@ -22,5 +22,5 @@ public class Tariff {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id")
-    private TariffType type;
+    private TariffType tariffType;
 }

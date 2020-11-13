@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public class MemoOfDeliveryService {
     private final DeliveryOfWagonRepository deliveryOfWagonRepository;
     private final SignerRepository signerRepository;
 
-    public List<MemoOfDeliveryDto> getAllMemoOfDeliverys() {
+    public List<MemoOfDeliveryDto> getAllMemoOfDeliveries() {
 
         List<MemoOfDelivery> memoOfDeliveryList = memoOfDeliveryRepository.findAll();
         List<MemoOfDeliveryDto> memoOfDeliveryDtoList = memoOfDeliveryList.stream()
@@ -45,11 +46,8 @@ public class MemoOfDeliveryService {
 
     public MemoOfDeliveryDto createMemoOfDelivery(MemoOfDeliveryDto memoOfDeliveryDto) {
         MemoOfDelivery memoOfDelivery = memoOfDeliveryMapper.map(memoOfDeliveryDto);
-        memoOfDelivery.setCreated(Instant.now());
+        memoOfDelivery.setCreated(new Date());
         memoOfDelivery.setAuthor(authService.getCurrentUser());
-        memoOfDelivery.setCargoOperation(cargoOperationRepository.findByOperation(memoOfDeliveryDto.getCargoOperation().getOperation()));
-        memoOfDelivery.setCustomer(customerRepository.findByCustomerName(memoOfDeliveryDto.getCustomer().getCustomerName()));
-        memoOfDelivery.setComment(memoOfDeliveryDto.getComment());
         return memoOfDeliveryMapper.mapToDto(memoOfDeliveryRepository.save(memoOfDelivery));
     }
 
@@ -57,23 +55,25 @@ public class MemoOfDeliveryService {
         MemoOfDelivery memoOfDelivery = memoOfDeliveryRepository.findById(memoOfDeliveryDto.getMemoOfDeliveryId())
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find memoOfDelivery by id to update"));
         CargoOperation cargoOperation = cargoOperationRepository
-                .findByOperation(memoOfDeliveryDto.getCargoOperation().getOperation());
+                .findByOperationName(memoOfDeliveryDto.getCargoOperation());
         memoOfDelivery.setCargoOperation(cargoOperation);
         memoOfDelivery.setCustomer(customerRepository
                 .findByCustomerName(memoOfDeliveryDto.getCustomer().getCustomerName()));
         memoOfDelivery.setStartDate(memoOfDeliveryDto.getStartDate());
         memoOfDelivery.setComment(memoOfDeliveryDto.getComment());
-        memoOfDelivery.setSigner(signerRepository.findByInitials(memoOfDeliveryDto.getSigner().getInitials()));
+        memoOfDelivery.setSigner(signerRepository.findByInitials(memoOfDeliveryDto.getSigner()));
 
-        for (DeliveryOfWagonDto delivery : memoOfDeliveryDto.getDeliveryOfWagonList()) {
-            DeliveryOfWagon deliveryOfWagonById = deliveryOfWagonRepository.findById(delivery.getDeliveryId()).get();
-            deliveryOfWagonById.setStartDate(memoOfDelivery.getStartDate());
-            deliveryOfWagonById.setCustomer(memoOfDelivery.getCustomer());
-            deliveryOfWagonById.setCargoOperation(memoOfDelivery.getCargoOperation());
-            if (cargoOperation.getOperation() != "ВЫГРУЗКА") {
-                deliveryOfWagonById.setLoadUnloadWork(false);
+        if (memoOfDeliveryDto.getDeliveryOfWagonList() != null) {
+            for (DeliveryOfWagonDto delivery : memoOfDeliveryDto.getDeliveryOfWagonList()) {
+                DeliveryOfWagon deliveryOfWagonById = deliveryOfWagonRepository.findById(delivery.getDeliveryId()).get();
+                deliveryOfWagonById.setStartDate(memoOfDelivery.getStartDate());
+                deliveryOfWagonById.setCustomer(memoOfDelivery.getCustomer());
+                deliveryOfWagonById.setCargoOperation(memoOfDelivery.getCargoOperation());
+                if (cargoOperation.getOperationName() != "ВЫГРУЗКА") {
+                    deliveryOfWagonById.setLoadUnloadWork(false);
+                }
+                deliveryOfWagonRepository.save(deliveryOfWagonById);
             }
-            deliveryOfWagonRepository.save(deliveryOfWagonById);
         }
 
         return memoOfDeliveryMapper.mapToDto(memoOfDeliveryRepository.save(memoOfDelivery));
