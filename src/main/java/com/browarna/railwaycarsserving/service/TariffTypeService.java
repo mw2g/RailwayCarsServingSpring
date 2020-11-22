@@ -1,8 +1,8 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.model.TariffType;
 import com.browarna.railwaycarsserving.repository.TariffTypeRepository;
+import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,8 +1,8 @@
 package com.browarna.railwaycarsserving.controller;
 
+import com.browarna.railwaycarsserving.service.MemoOfDispatchService;
 import com.browarna.railwaycarsserving.dto.MemoIdListAndStatementIdDto;
 import com.browarna.railwaycarsserving.dto.MemoOfDispatchDto;
-import com.browarna.railwaycarsserving.service.MemoOfDispatchService;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.data.repository.query.Param;
@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -21,10 +22,11 @@ public class MemoOfDispatchController {
 
     private final MemoOfDispatchService memoOfDispatchService;
 
-    @GetMapping
-    public ResponseEntity<List<MemoOfDispatchDto>> getAllMemoOfDispatchs() {
+    @GetMapping("/{afterDate}/{beforeDate}")
+    public ResponseEntity<List<MemoOfDispatchDto>> getAllMemoOfDispatches(
+            @PathVariable Date afterDate, @PathVariable Date beforeDate) {
         return ResponseEntity.status(OK)
-                .body(memoOfDispatchService.getAll());
+                .body(memoOfDispatchService.getAll(afterDate, beforeDate));
     }
 
     @GetMapping("/{id}")

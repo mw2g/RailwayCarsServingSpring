@@ -1,7 +1,6 @@
 package com.browarna.railwaycarsserving.controller;
 
 import com.browarna.railwaycarsserving.model.TariffType;
-import com.browarna.railwaycarsserving.model.TariffType;
 import com.browarna.railwaycarsserving.service.TariffTypeService;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;

@@ -1,22 +1,20 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.dto.CustomerDto;
 import com.browarna.railwaycarsserving.dto.SignerDto;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
-import com.browarna.railwaycarsserving.mapper.CargoOperationMapper;
-import com.browarna.railwaycarsserving.mapper.CustomerMapper;
 import com.browarna.railwaycarsserving.mapper.SignerMapper;
-import com.browarna.railwaycarsserving.mapper.UserMapper;
 import com.browarna.railwaycarsserving.model.Customer;
-import com.browarna.railwaycarsserving.model.DeliveryOfWagon;
-import com.browarna.railwaycarsserving.model.MemoOfDelivery;
 import com.browarna.railwaycarsserving.model.Signer;
-import com.browarna.railwaycarsserving.repository.*;
+import com.browarna.railwaycarsserving.repository.CustomerRepository;
+import com.browarna.railwaycarsserving.repository.MemoOfDeliveryRepository;
+import com.browarna.railwaycarsserving.repository.SignerRepository;
+import com.browarna.railwaycarsserving.dto.CustomerDto;
+import com.browarna.railwaycarsserving.mapper.CustomerMapper;
+import com.browarna.railwaycarsserving.model.MemoOfDelivery;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;

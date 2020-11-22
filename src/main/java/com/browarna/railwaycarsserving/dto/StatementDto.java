@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +17,6 @@ public class StatementDto {
     private String author;
     private List<MemoOfDispatchDto> memoOfDispatchList;
     private String cargoOperation;
-    private String customer;
+    private CustomerDto customer;
     private String signer;
 }

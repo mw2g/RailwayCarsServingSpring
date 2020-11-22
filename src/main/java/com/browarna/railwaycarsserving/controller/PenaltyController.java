@@ -1,7 +1,7 @@
 package com.browarna.railwaycarsserving.controller;
 
-import com.browarna.railwaycarsserving.model.Penalty;
 import com.browarna.railwaycarsserving.service.PenaltyService;
+import com.browarna.railwaycarsserving.model.Penalty;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -48,7 +47,7 @@ public class DeliveryOfWagon {
     private Wagon wagon;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "type_id")
+    @JoinColumn(name = "wagon_type_id")
     private WagonType wagonType;
 
     @ManyToOne(fetch = FetchType.EAGER)

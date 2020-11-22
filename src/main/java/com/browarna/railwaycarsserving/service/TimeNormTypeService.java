@@ -1,9 +1,7 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
-import com.browarna.railwaycarsserving.model.TariffType;
 import com.browarna.railwaycarsserving.model.TimeNormType;
-import com.browarna.railwaycarsserving.repository.TariffTypeRepository;
+import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.repository.TimeNormTypeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

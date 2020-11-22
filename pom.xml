@@ -11,6 +11,7 @@
     <groupId>com.browarna</groupId>
     <artifactId>RailwayCarsServing</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>RailwayCarsServing</name>
     <description>Railway cars serving</description>
 
@@ -129,9 +130,19 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-tomcat -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <version>2.4.0</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
+        <finalName>railway-car-serving</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

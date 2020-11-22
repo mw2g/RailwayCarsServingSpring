@@ -2,6 +2,7 @@ package com.browarna.railwaycarsserving.mapper;
 
 import com.browarna.railwaycarsserving.dto.MemoOfDispatchDto;
 import com.browarna.railwaycarsserving.dto.StatementDto;
+import com.browarna.railwaycarsserving.model.MemoOfDispatch;
 import com.browarna.railwaycarsserving.model.Statement;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,34 +13,31 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public abstract class StatementMapper {
-    @Autowired
-    private DeliveryOfWagonMapper deliveryOfWagonMapper;
+
     @Autowired
     private MemoOfDispatchMapper memoOfDispatchMapper;
     @Autowired
-    private SignerMapper signerMapper;
-    @Autowired
-    private CustomerMapper customerMapper;
+    protected MapperService mapperService;
 
     @Mapping(target = "statementId", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "memoOfDispatchList", ignore = true)
     @Mapping(target = "signer", ignore = true)
-    @Mapping(target = "customer", ignore = true)
-    @Mapping(target = "cargoOperation", ignore = true)
+    @Mapping(target = "cargoOperation", expression = "java(mapperService.operationNameToCargoOperation(statementDto.getCargoOperation()))")
+    @Mapping(target = "customer", expression = "java(mapperService.customerNameToCustomer(statementDto.getCustomer().getCustomerName()))")
     public abstract Statement map(StatementDto statementDto);
 
-    @Mapping(target = "memoOfDispatchList", expression = "java(mapToDtoMemoOfDispatchList(statement))")
-    @Mapping(target = "author", expression = "java(statement.getAuthor().getInitials())")
+    @Mapping(target = "author", expression = "java(mapperService.authorToAuthorInitials(statement.getAuthor()))")
     @Mapping(target = "cargoOperation", expression = "java(statement.getCargoOperation().getOperationName())")
-    @Mapping(target = "customer", expression = "java(statement.getCustomer().getCustomerName())")
-    @Mapping(target = "signer", expression = "java(statement.getSigner().getInitials())")
+    @Mapping(target = "customer", expression = "java(mapperService.mapToDtoCustomer(statement.getCustomer()))")
+    @Mapping(target = "signer", expression = "java(mapperService.signerToSignerInitials(statement.getSigner()))")
+    @Mapping(target = "memoOfDispatchList", expression = "java(mapToDtoMemoOfDispatchList(statement.getMemoOfDispatchList()))")
     public abstract StatementDto mapToDto(Statement statement);
 
-    List<MemoOfDispatchDto> mapToDtoMemoOfDispatchList(Statement statement) {
-        if (statement.getMemoOfDispatchList() != null) {
-            List<MemoOfDispatchDto> memoOfDispatchDtoList = statement.getMemoOfDispatchList().stream()
+    List<MemoOfDispatchDto> mapToDtoMemoOfDispatchList(List<MemoOfDispatch> memoOfDispatchList) {
+        if (memoOfDispatchList != null) {
+            List<MemoOfDispatchDto> memoOfDispatchDtoList = memoOfDispatchList.stream()
                     .map(memoOfDispatch -> memoOfDispatchMapper.mapToDto(memoOfDispatch))
                     .collect(Collectors.toList());
             return memoOfDispatchDtoList;
@@ -47,22 +45,4 @@ public abstract class StatementMapper {
             return null;
         }
     }
-
-//    SignerDto mapToDtoSigner(Statement statement) {
-//        if (statement.getSigner() != null) {
-//            SignerDto signerDto = signerMapper.mapToDto(statement.getSigner());
-//            return signerDto;
-//        } else {
-//            return new SignerDto();
-//        }
-//    }
-
-//    CustomerDto mapToDtoCustomer(Statement statement) {
-//        if (statement.getCustomer() != null) {
-//            CustomerDto customerDto = customerMapper.mapToDto(statement.getCustomer());
-//            return customerDto;
-//        } else {
-//            return null;
-//        }
-//    }
 }

@@ -1,10 +1,11 @@
 package com.browarna.railwaycarsserving.service;
 
+import com.browarna.railwaycarsserving.mapper.MemoOfDispatchMapper;
+import com.browarna.railwaycarsserving.model.DeliveryOfWagon;
+import com.browarna.railwaycarsserving.repository.*;
 import com.browarna.railwaycarsserving.dto.MemoOfDispatchDto;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
-import com.browarna.railwaycarsserving.mapper.MemoOfDispatchMapper;
 import com.browarna.railwaycarsserving.model.Statement;
-import com.browarna.railwaycarsserving.model.DeliveryOfWagon;
 import com.browarna.railwaycarsserving.model.MemoOfDispatch;
 import com.browarna.railwaycarsserving.repository.*;
 import lombok.AllArgsConstructor;
@@ -28,9 +29,9 @@ public class MemoOfDispatchService {
     private final DeliveryOfWagonRepository deliveryOfWagonRepository;
     private final SignerRepository signerRepository;
 
-    public List<MemoOfDispatchDto> getAll() {
+    public List<MemoOfDispatchDto> getAll(Date afterDate, Date beforeDate) {
 
-        List<MemoOfDispatch> memoOfDispatchList = memoOfDispatchRepository.findAll();
+        List<MemoOfDispatch> memoOfDispatchList = memoOfDispatchRepository.findAllByEndDateBetween(afterDate, beforeDate);
         List<MemoOfDispatchDto> memoOfDispatchDtoList = memoOfDispatchList.stream()
                 .map(memoOfDispatch -> memoOfDispatchMapper.mapToDto(memoOfDispatch)).collect(Collectors.toList());
         return memoOfDispatchDtoList;

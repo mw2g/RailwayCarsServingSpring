@@ -1,11 +1,10 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.dto.SignerDto;
 import com.browarna.railwaycarsserving.dto.UserDto;
-import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.mapper.UserMapper;
 import com.browarna.railwaycarsserving.model.Role;
 import com.browarna.railwaycarsserving.model.User;
+import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

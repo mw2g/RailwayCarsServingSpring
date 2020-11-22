@@ -1,10 +1,8 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.model.IndexToBaseRate;
-import com.browarna.railwaycarsserving.model.WagonGroup;
 import com.browarna.railwaycarsserving.repository.IndexToBaseRateRepository;
-import com.browarna.railwaycarsserving.repository.WagonGroupRepository;
+import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,9 @@
 package com.browarna.railwaycarsserving.controller;
 
-import com.browarna.railwaycarsserving.dto.*;
+import com.browarna.railwaycarsserving.dto.BaseRateAndPenaltyResponse;
+import com.browarna.railwaycarsserving.dto.DeliveryIdListAndMemoIdDto;
+import com.browarna.railwaycarsserving.dto.DeliveryOfWagonDto;
+import com.browarna.railwaycarsserving.dto.StatementWithRateRequest;
 import com.browarna.railwaycarsserving.model.Owner;
 import com.browarna.railwaycarsserving.service.DeliveryOfWagonService;
 import lombok.AllArgsConstructor;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -23,9 +27,10 @@ public class DeliveryOfWagonController {
 
     private final DeliveryOfWagonService deliveryOfWagonService;
 
-    @GetMapping
-    public ResponseEntity<List<DeliveryOfWagonDto>> getAllDeliveryOfWagons() {
-        return ResponseEntity.status(OK).body(deliveryOfWagonService.getAllDeliveryOfWagons());
+    @GetMapping("/{afterDate}/{beforeDate}")
+    public ResponseEntity<List<DeliveryOfWagonDto>> getAllDeliveryOfWagons(
+            @PathVariable Date afterDate, @PathVariable Date beforeDate) {
+        return ResponseEntity.status(OK).body(deliveryOfWagonService.getAllDeliveryOfWagons(afterDate, beforeDate));
     }
 
     @PostMapping

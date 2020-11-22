@@ -1,9 +1,9 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.model.WagonGroup;
-import com.browarna.railwaycarsserving.model.WagonType;
 import com.browarna.railwaycarsserving.repository.WagonGroupRepository;
+import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
+import com.browarna.railwaycarsserving.model.WagonType;
 import com.browarna.railwaycarsserving.repository.WagonTypeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

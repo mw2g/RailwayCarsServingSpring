@@ -1,20 +1,18 @@
 package com.browarna.railwaycarsserving.service;
 
 import com.browarna.railwaycarsserving.dto.BaseRateAndPenaltyResponse;
-import com.browarna.railwaycarsserving.dto.DeliveryOfWagonDto;
 import com.browarna.railwaycarsserving.dto.StatementWithRateRequest;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
-import com.browarna.railwaycarsserving.mapper.CargoOperationMapper;
-import com.browarna.railwaycarsserving.mapper.CustomerMapper;
 import com.browarna.railwaycarsserving.mapper.DeliveryOfWagonMapper;
-import com.browarna.railwaycarsserving.mapper.UserMapper;
+import com.browarna.railwaycarsserving.model.*;
+import com.browarna.railwaycarsserving.repository.*;
+import com.browarna.railwaycarsserving.dto.DeliveryOfWagonDto;
 import com.browarna.railwaycarsserving.model.*;
 import com.browarna.railwaycarsserving.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +36,9 @@ public class DeliveryOfWagonService {
     private final BaseRateRepository baseRateRepository;
     private final PenaltyRepository penaltyRepository;
 
-    public List<DeliveryOfWagonDto> getAllDeliveryOfWagons() {
+    public List<DeliveryOfWagonDto> getAllDeliveryOfWagons(Date afterDate, Date beforeDate) {
 
-        List<DeliveryOfWagon> deliveryOfWagonList = deliveryOfWagonRepository.findAll();
+        List<DeliveryOfWagon> deliveryOfWagonList = deliveryOfWagonRepository.findAllByStartDateBetween(afterDate, beforeDate);
         return deliveryOfWagonList.stream().map(deliveryOfWagon -> deliveryOfWagonMapper.mapToDto(deliveryOfWagon))
                 .collect(Collectors.toList());
     }

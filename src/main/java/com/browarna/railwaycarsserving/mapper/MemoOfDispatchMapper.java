@@ -11,16 +11,17 @@ public abstract class MemoOfDispatchMapper {
     @Autowired
     protected MapperService mapperService;
 
+//    @Mapping(target = "deliveryOfWagonList", expression = "java(mapperService.mapDeliveryOfWagonList(memoOfDispatchDto.getDeliveryOfWagonList()))")
+    @Mapping(target = "deliveryOfWagonList", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "cargoOperation", expression = "java(mapperService.operationNameToCargoOperation(memoOfDispatchDto.getCargoOperation()))")
     @Mapping(target = "customer", expression = "java(mapperService.customerNameToCustomer(memoOfDispatchDto.getCustomer().getCustomerName()))")
     @Mapping(target = "signer", expression = "java(mapperService.signerInitialsToSigner(memoOfDispatchDto.getSigner()))")
-    @Mapping(target = "deliveryOfWagonList", expression = "java(mapperService.mapDeliveryOfWagonList(memoOfDispatchDto.getDeliveryOfWagonList()))")
     @Mapping(target = "statement", expression = "java(mapperService.statementIdToStatement(memoOfDispatchDto.getStatement()))")
     public abstract MemoOfDispatch map(MemoOfDispatchDto memoOfDispatchDto);
 
-    @Mapping(target = "author", expression = "java(memoOfDispatch.getAuthor().getInitials())")
+    @Mapping(target = "author", expression = "java(mapperService.authorToAuthorInitials(memoOfDispatch.getAuthor()))")
     @Mapping(target = "cargoOperation", expression = "java(memoOfDispatch.getCargoOperation().getOperationName())")
     @Mapping(target = "customer", expression = "java(mapperService.mapToDtoCustomer(memoOfDispatch.getCustomer()))")
     @Mapping(target = "signer", expression = "java(mapperService.signerToSignerInitials(memoOfDispatch.getSigner()))")

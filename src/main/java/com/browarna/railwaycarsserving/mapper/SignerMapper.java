@@ -1,9 +1,9 @@
 package com.browarna.railwaycarsserving.mapper;
 
-import com.browarna.railwaycarsserving.dto.SignerDto;
 import com.browarna.railwaycarsserving.model.Customer;
-import com.browarna.railwaycarsserving.model.Signer;
 import com.browarna.railwaycarsserving.repository.CustomerRepository;
+import com.browarna.railwaycarsserving.dto.SignerDto;
+import com.browarna.railwaycarsserving.model.Signer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,8 @@
 package com.browarna.railwaycarsserving.mapper;
 
-import com.browarna.railwaycarsserving.dto.UserDto;
 import com.browarna.railwaycarsserving.dto.UserRefreshTokenDto;
-import com.browarna.railwaycarsserving.model.RefreshToken;
 import com.browarna.railwaycarsserving.model.User;
+import com.browarna.railwaycarsserving.dto.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

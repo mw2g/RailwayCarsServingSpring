@@ -1,18 +1,18 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.dto.DeliveryOfWagonDto;
 import com.browarna.railwaycarsserving.dto.MemoOfDeliveryDto;
-import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.mapper.MemoOfDeliveryMapper;
-import com.browarna.railwaycarsserving.model.CargoOperation;
 import com.browarna.railwaycarsserving.model.DeliveryOfWagon;
+import com.browarna.railwaycarsserving.repository.*;
+import com.browarna.railwaycarsserving.dto.DeliveryOfWagonDto;
+import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
+import com.browarna.railwaycarsserving.model.CargoOperation;
 import com.browarna.railwaycarsserving.model.MemoOfDelivery;
 import com.browarna.railwaycarsserving.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,29 +29,29 @@ public class MemoOfDeliveryService {
     private final DeliveryOfWagonRepository deliveryOfWagonRepository;
     private final SignerRepository signerRepository;
 
-    public List<MemoOfDeliveryDto> getAllMemoOfDeliveries() {
+    public List<MemoOfDeliveryDto> getAll(Date afterDate, Date beforeDate) {
 
-        List<MemoOfDelivery> memoOfDeliveryList = memoOfDeliveryRepository.findAll();
+        List<MemoOfDelivery> memoOfDeliveryList = memoOfDeliveryRepository.findAllByStartDateBetween(afterDate, beforeDate);
         List<MemoOfDeliveryDto> memoOfDeliveryDtoList = memoOfDeliveryList.stream()
                 .map(memoOfDelivery -> memoOfDeliveryMapper.mapToDto(memoOfDelivery)).collect(Collectors.toList());
         return memoOfDeliveryDtoList;
     }
 
-    public MemoOfDeliveryDto getMemoOfDeliveryById(Long memoOfDeliveryId) {
+    public MemoOfDeliveryDto getById(Long memoOfDeliveryId) {
 
         MemoOfDelivery memoOfDelivery = memoOfDeliveryRepository.findById(memoOfDeliveryId).get();
         MemoOfDeliveryDto memoOfDeliveryDto = memoOfDeliveryMapper.mapToDto(memoOfDelivery);
         return memoOfDeliveryDto;
     }
 
-    public MemoOfDeliveryDto createMemoOfDelivery(MemoOfDeliveryDto memoOfDeliveryDto) {
+    public MemoOfDeliveryDto create(MemoOfDeliveryDto memoOfDeliveryDto) {
         MemoOfDelivery memoOfDelivery = memoOfDeliveryMapper.map(memoOfDeliveryDto);
         memoOfDelivery.setCreated(new Date());
         memoOfDelivery.setAuthor(authService.getCurrentUser());
         return memoOfDeliveryMapper.mapToDto(memoOfDeliveryRepository.save(memoOfDelivery));
     }
 
-    public MemoOfDeliveryDto updateMemoOfDelivery(MemoOfDeliveryDto memoOfDeliveryDto) {
+    public MemoOfDeliveryDto update(MemoOfDeliveryDto memoOfDeliveryDto) {
         MemoOfDelivery memoOfDelivery = memoOfDeliveryRepository.findById(memoOfDeliveryDto.getMemoOfDeliveryId())
                 .orElseThrow(() -> new RailwayCarsServingException("Can`t find memoOfDelivery by id to update"));
         CargoOperation cargoOperation = cargoOperationRepository

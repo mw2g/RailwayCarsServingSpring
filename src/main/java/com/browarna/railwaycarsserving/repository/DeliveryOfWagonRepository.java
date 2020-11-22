@@ -1,6 +1,7 @@
 package com.browarna.railwaycarsserving.repository;
 
 import com.browarna.railwaycarsserving.model.*;
+import com.browarna.railwaycarsserving.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Date;
@@ -27,5 +28,7 @@ public interface DeliveryOfWagonRepository extends JpaRepository<DeliveryOfWagon
     Optional<DeliveryOfWagon> findByWagon_WagonNumberAndStartDate(String wagonNumber, Date startDate);
 
     Optional<DeliveryOfWagon> findFirstByWagon_WagonNumberOrderByCreatedDesc(String wagonNumber);
+
+    List<DeliveryOfWagon> findAllByStartDateBetween(Date afterDate, Date beforeDate);
 
 }

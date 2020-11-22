@@ -1,7 +1,7 @@
 package com.browarna.railwaycarsserving.controller;
 
-import com.browarna.railwaycarsserving.dto.StatementDto;
 import com.browarna.railwaycarsserving.dto.StatementRateResponse;
+import com.browarna.railwaycarsserving.dto.StatementDto;
 import com.browarna.railwaycarsserving.dto.StatementWithRateResponse;
 import com.browarna.railwaycarsserving.service.StatementService;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -20,10 +21,11 @@ public class StatementController {
 
     private final StatementService statementService;
 
-    @GetMapping
-    public ResponseEntity<List<StatementDto>> getAllStatements() {
+    @GetMapping("/{afterDate}/{beforeDate}")
+    public ResponseEntity<List<StatementDto>> getAllStatements(
+            @PathVariable Date afterDate, @PathVariable Date beforeDate) {
         return ResponseEntity.status(OK)
-                .body(statementService.getAllStatements());
+                .body(statementService.getAllStatements(afterDate, beforeDate));
     }
 
     @GetMapping("/{id}")

@@ -39,7 +39,7 @@ create table delivery_of_wagon (delivery_id bigint not null auto_increment,
     memo_of_dispatch_id bigint,
     owner_id bigint,
     wagon_id bigint,
-    type_id bigint,
+    wagon_type_id bigint,
     primary key (delivery_id)
 );
 
@@ -246,7 +246,7 @@ alter table delivery_of_wagon
 
 alter table delivery_of_wagon
     add constraint delivery_of_wagon_wagon_type_fk
-    foreign key (type_id)
+    foreign key (wagon_type_id)
     references wagon_type (type_id);
 
 alter table memo_of_delivery

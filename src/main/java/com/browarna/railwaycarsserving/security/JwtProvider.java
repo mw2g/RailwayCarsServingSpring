@@ -1,7 +1,7 @@
 package com.browarna.railwaycarsserving.security;
 
-import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.model.User;
+import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;

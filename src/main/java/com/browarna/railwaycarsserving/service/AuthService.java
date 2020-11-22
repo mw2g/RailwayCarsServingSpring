@@ -1,9 +1,9 @@
 package com.browarna.railwaycarsserving.service;
 
+import com.browarna.railwaycarsserving.model.User;
 import com.browarna.railwaycarsserving.dto.AuthenticationResponse;
 import com.browarna.railwaycarsserving.dto.LoginRequest;
 import com.browarna.railwaycarsserving.dto.RefreshTokenRequest;
-import com.browarna.railwaycarsserving.model.User;
 import com.browarna.railwaycarsserving.repository.UserRepository;
 import com.browarna.railwaycarsserving.security.JwtProvider;
 import lombok.AllArgsConstructor;

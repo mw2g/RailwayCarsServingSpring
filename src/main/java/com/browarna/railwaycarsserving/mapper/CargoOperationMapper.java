@@ -1,7 +1,7 @@
 package com.browarna.railwaycarsserving.mapper;
 
-import com.browarna.railwaycarsserving.dto.CargoOperationDto;
 import com.browarna.railwaycarsserving.model.CargoOperation;
+import com.browarna.railwaycarsserving.dto.CargoOperationDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

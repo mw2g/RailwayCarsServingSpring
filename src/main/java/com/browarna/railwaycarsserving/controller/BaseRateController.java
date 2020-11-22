@@ -1,8 +1,7 @@
 package com.browarna.railwaycarsserving.controller;
 
+import com.browarna.railwaycarsserving.service.BaseRateService;
 import com.browarna.railwaycarsserving.model.BaseRate;
-import com.browarna.railwaycarsserving.service.BaseRateService;
-import com.browarna.railwaycarsserving.service.BaseRateService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

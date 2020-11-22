@@ -6,6 +6,7 @@ import com.browarna.railwaycarsserving.model.MemoOfDispatch;
 import com.browarna.railwaycarsserving.model.Statement;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public interface MemoOfDispatchRepository extends JpaRepository<MemoOfDispatch, 
             Customer customer,
             CargoOperation cargoOperation,
             Statement statement);
+
+    List<MemoOfDispatch> findAllByEndDateBetween(Date afterDate, Date beforeDate);
 }

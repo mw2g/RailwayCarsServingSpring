@@ -1,7 +1,9 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.dto.StatementDto;
 import com.browarna.railwaycarsserving.dto.StatementRateResponse;
+import com.browarna.railwaycarsserving.model.*;
+import com.browarna.railwaycarsserving.repository.*;
+import com.browarna.railwaycarsserving.dto.StatementDto;
 import com.browarna.railwaycarsserving.dto.StatementWithRateResponse;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.mapper.StatementMapper;
@@ -30,9 +32,9 @@ public class StatementService {
     private final TariffRepository tariffRepository;
     private final IndexToBaseRateRepository indexToBaseRateRepository;
 
-    public List<StatementDto> getAllStatements() {
+    public List<StatementDto> getAllStatements(Date afterDate, Date beforeDate) {
 
-        List<Statement> statementList = statementRepository.findAll();
+        List<Statement> statementList = statementRepository.findAllByCreatedBetween(afterDate, beforeDate);
         List<StatementDto> statementDtoList = statementList.stream()
                 .map(statement -> statementMapper.mapToDto(statement)).collect(Collectors.toList());
         return statementDtoList;
@@ -77,7 +79,7 @@ public class StatementService {
         statement.setCargoOperation(cargoOperationRepository
                 .findByOperationName(statementDto.getCargoOperation()));
         statement.setCustomer(customerRepository
-                .findByCustomerName(statementDto.getCustomer()));
+                .findByCustomerName(statementDto.getCustomer().getCustomerName()));
         statement.setComment(statementDto.getComment());
         return statementMapper.mapToDto(statementRepository.save(statement));
     }
@@ -90,7 +92,7 @@ public class StatementService {
                 .findByOperationName(statementDto.getCargoOperation());
         statement.setCargoOperation(cargoOperation);
         statement.setCustomer(customerRepository
-                .findByCustomerName(statementDto.getCustomer()));
+                .findByCustomerName(statementDto.getCustomer().getCustomerName()));
         statement.setSigner(signerRepository.findByInitials(statementDto.getSigner()));
         statement.setComment(statementDto.getComment());
 

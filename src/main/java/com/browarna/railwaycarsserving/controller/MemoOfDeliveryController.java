@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -18,28 +19,29 @@ public class MemoOfDeliveryController {
 
     private final MemoOfDeliveryService memoOfDeliveryService;
 
-    @GetMapping
-    public ResponseEntity<List<MemoOfDeliveryDto>> getAllMemoOfDeliverys() {
+    @GetMapping("/{afterDate}/{beforeDate}")
+    public ResponseEntity<List<MemoOfDeliveryDto>> getAllMemoOfDeliveries(
+            @PathVariable Date afterDate, @PathVariable Date beforeDate) {
         return ResponseEntity.status(OK)
-                .body(memoOfDeliveryService.getAllMemoOfDeliveries());
+                .body(memoOfDeliveryService.getAll(afterDate, beforeDate));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<MemoOfDeliveryDto> getMemoOfDeliveryById(@PathVariable Long id) {
         return ResponseEntity.status(OK)
-                .body(memoOfDeliveryService.getMemoOfDeliveryById(id));
+                .body(memoOfDeliveryService.getById(id));
     }
 
     @PostMapping
     public ResponseEntity<MemoOfDeliveryDto> createMemoOfDelivery(@RequestBody MemoOfDeliveryDto memoOfDeliveryDto) {
     return ResponseEntity.status(OK)
-                .body(memoOfDeliveryService.createMemoOfDelivery(memoOfDeliveryDto));
+                .body(memoOfDeliveryService.create(memoOfDeliveryDto));
     }
 
     @PutMapping
     public ResponseEntity<MemoOfDeliveryDto> updateMemoOfDelivery(@RequestBody MemoOfDeliveryDto memoOfDeliveryDto) {
         return ResponseEntity.status(OK)
-                .body(memoOfDeliveryService.updateMemoOfDelivery(memoOfDeliveryDto));
+                .body(memoOfDeliveryService.update(memoOfDeliveryDto));
     }
 
     @DeleteMapping("/{id}")

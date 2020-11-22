@@ -22,7 +22,7 @@ public abstract class MemoOfDeliveryMapper {
 
     @Mapping(target = "signer", expression = "java(mapperService.signerToSignerInitials(memoOfDelivery.getSigner()))")
     @Mapping(target = "cargoOperation", expression = "java(memoOfDelivery.getCargoOperation().getOperationName())")
-    @Mapping(target = "author", expression = "java(memoOfDelivery.getAuthor().getInitials())")
+    @Mapping(target = "author", expression = "java(mapperService.authorToAuthorInitials(memoOfDelivery.getAuthor()))")
     @Mapping(target = "customer", expression = "java(mapperService.mapToDtoCustomer(memoOfDelivery.getCustomer()))")
     @Mapping(target = "deliveryOfWagonList", expression = "java(mapperService.mapToDtoDeliveryOfWagonList(memoOfDelivery.getDeliveryOfWagonList()))")
     public abstract MemoOfDeliveryDto mapToDto(MemoOfDelivery memoOfDelivery);

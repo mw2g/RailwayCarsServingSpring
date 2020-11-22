@@ -1,6 +1,6 @@
 //package com.browarna.railwaycarsserving.config;
 //
-//import com.browarna.railwaycarsserving.model.User;
+//import User;
 //import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.authority.SimpleGrantedAuthority;
 //import org.springframework.security.core.userdetails.UserDetails;

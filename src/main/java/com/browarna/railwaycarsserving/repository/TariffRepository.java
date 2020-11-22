@@ -1,7 +1,6 @@
 package com.browarna.railwaycarsserving.repository;
 
 import com.browarna.railwaycarsserving.model.Tariff;
-import com.browarna.railwaycarsserving.model.TimeNorm;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Date;

@@ -1,6 +1,5 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.model.RefreshToken;
 import com.browarna.railwaycarsserving.repository.RefreshTokenRepository;
 import com.browarna.railwaycarsserving.repository.UserRepository;
@@ -8,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 

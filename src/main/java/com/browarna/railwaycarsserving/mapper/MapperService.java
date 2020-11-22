@@ -1,10 +1,11 @@
 package com.browarna.railwaycarsserving.mapper;
 
+import com.browarna.railwaycarsserving.model.*;
+import com.browarna.railwaycarsserving.repository.*;
 import com.browarna.railwaycarsserving.dto.CustomerDto;
 import com.browarna.railwaycarsserving.dto.DeliveryOfWagonDto;
 import com.browarna.railwaycarsserving.model.*;
 import com.browarna.railwaycarsserving.repository.*;
-import com.browarna.railwaycarsserving.service.DeliveryOfWagonService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -102,6 +103,62 @@ public class MapperService {
         }
     }
 
+    String cargoTypeToCargoTypeName(CargoType cargoType) {
+        if (cargoType != null) {
+            return cargoType.getTypeName();
+        } else {
+            return null;
+        }
+    }
+
+    String cargoOperationToCargoOperationName(CargoOperation cargoOperation) {
+        if (cargoOperation != null) {
+            return cargoOperation.getOperationName();
+        } else {
+            return null;
+        }
+    }
+
+    String wagonTypeToWagonTypeName(WagonType wagonType) {
+        if (wagonType != null) {
+            return wagonType.getTypeName();
+        } else {
+            return null;
+        }
+    }
+
+    String wagonToWagonNumber(Wagon wagon) {
+        if (wagon != null) {
+            return wagon.getWagonNumber();
+        } else {
+            return null;
+        }
+    }
+
+    String ownerToOwnerName(Owner owner) {
+        if (owner != null) {
+            return owner.getOwnerName();
+        } else {
+            return null;
+        }
+    }
+
+    String customerToCustomerName(Customer customer) {
+        if (customer != null) {
+            return customer.getCustomerName();
+        } else {
+            return null;
+        }
+    }
+
+    String authorToAuthorInitials(User author) {
+        if (author != null) {
+            return author.getInitials();
+        } else {
+            return null;
+        }
+    }
+
     List<DeliveryOfWagon> mapDeliveryOfWagonList(List<DeliveryOfWagonDto> deliveryOfWagonDtoList) {
         if (deliveryOfWagonDtoList != null) {
             List<DeliveryOfWagon> deliveryOfWagonList = deliveryOfWagonDtoList.stream()
@@ -137,4 +194,5 @@ public class MapperService {
         }
         return null;
     }
+
 }
