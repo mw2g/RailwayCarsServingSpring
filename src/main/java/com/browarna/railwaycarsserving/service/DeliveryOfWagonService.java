@@ -65,7 +65,7 @@ public class DeliveryOfWagonService {
                 deliveryOfWagonDto.getWagon(),
                 deliveryOfWagonDto.getStartDate());
         if (deliveryFromBase.isPresent() && deliveryFromBase.filter(deliveryOfWagon ->
-                deliveryOfWagon.getDeliveryId() != deliveryOfWagonDto.getDeliveryId()).isPresent()) {
+                !deliveryOfWagon.getDeliveryId().equals(deliveryOfWagonDto.getDeliveryId())).isPresent()) {
             return null;
         }
 

@@ -17,5 +17,6 @@ public class StatementRateResponse {
     private TimeNorm turnoverTimeNorm;
     private Tariff deliveryDispatchTariff;
     private Tariff shuntingTariff;
+    private Tariff loadUnloadTariff;
     private IndexToBaseRate indexToBaseRate;
 }

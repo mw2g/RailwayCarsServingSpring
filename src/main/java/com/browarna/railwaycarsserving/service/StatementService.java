@@ -57,10 +57,13 @@ public class StatementService {
         Tariff shuntingTariff = tariffRepository
                 .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
                         "shuntingWork", date).get();
+        Tariff loadUnloadTariff = tariffRepository
+                .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
+                        "loadUnloadWork", date).get();
         IndexToBaseRate indexToBaseRate = indexToBaseRateRepository
                 .findFirstByRelevanceDateLessThanEqualOrderByRelevanceDateDesc(date).get();
         StatementRateResponse response = new StatementRateResponse(deliveryDispatchTimeNorm, turnoverTimeNorm,
-                deliveryDispatchTariff, shuntingTariff, indexToBaseRate);
+                deliveryDispatchTariff, shuntingTariff, loadUnloadTariff, indexToBaseRate);
         StatementWithRateResponse statementWithRateResponse = new StatementWithRateResponse(statementDto, response);
         return statementWithRateResponse;
     }

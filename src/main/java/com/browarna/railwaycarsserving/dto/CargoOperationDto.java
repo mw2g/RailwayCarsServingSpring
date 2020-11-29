@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CargoOperationDto {
     private Long operationId;
-    private String operation;
+    private String operationName;
 }
