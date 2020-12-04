@@ -4,12 +4,14 @@ import com.browarna.railwaycarsserving.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,19 +33,57 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and()
+                .httpBasic().disable()
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
-//                .antMatchers("/api/**").hasRole("USER")
-                .antMatchers("/api/memo/**").hasRole("USER")
-                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,
+                        "/api/delivery/**",
+                        "/api/memo/**",
+                        "/api/statement/**",
+                        "/api/wagon-type/**",
+                        "/api/wagon-group/**",
+                        "/api/customer/**",
+                        "/api/cargo-type/**",
+                        "/api/cargo-operation/**",
+                        "/api/base-rate/**",
+                        "/api/index-to-base-rate/**",
+                        "/api/penalty/**",
+                        "/api/tariff/**",
+                        "/api/tariff-type/**",
+                        "/api/time-norm/**",
+                        "/api/time-norm-type/**").hasRole("WATCH")
+                .antMatchers(HttpMethod.DELETE,
+                        "/api/delivery/**",
+                        "/api/memo/**",
+                        "/api/statement/**").hasRole("ADMIN")
+                .antMatchers(
+                        "/api/delivery/**",
+                        "/api/memo/**",
+                        "/api/statement/**").hasRole("USER")
+                .antMatchers(
+                        "/api/admin/**",
+                        "/api/wagon-type/**",
+                        "/api/wagon-group/**",
+                        "/api/customer/**",
+                        "/api/cargo-type/**",
+                        "/api/cargo-operation/**",
+                        "/api/base-rate/**",
+                        "/api/index-to-base-rate/**",
+                        "/api/penalty/**",
+                        "/api/tariff/**",
+                        "/api/tariff-type/**",
+                        "/api/time-norm/**",
+                        "/api/time-norm-type/**").hasRole("ADMIN")
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("/v2/api-docs",
-                        "/configuration/ui",
-                        "/swagger-resources/**",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**")
-                .permitAll()
+//                .antMatchers("/v2/api-docs",
+//                        "/configuration/ui",
+//                        "/swagger-resources/**",
+//                        "/configuration/security",
+//                        "/swagger-ui.html",
+//                        "/webjars/**")
+//                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -54,8 +94,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterBefore(jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class);
 
-//        // For ADMIN only.
-//        http.authorizeRequests().antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
     }
 
     @Autowired

@@ -15,8 +15,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfiguration {
     @Bean
-    public Docket redditCloneApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
+    public Docket railwayCarsServingApi() {
+        return new Docket(DocumentationType.SPRING_WEB)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
@@ -26,10 +26,10 @@ public class SwaggerConfiguration {
 
     private ApiInfo getApiInfo() {
         return new ApiInfoBuilder()
-                .title("Reddit Clone API")
+                .title("Railway cars serving")
                 .version("1.0")
-                .description("API for Reddit Clone Application")
-                .contact(new Contact("Sai Upadhyayula", "http://programmingtechie.com", "xyz@email.com"))
+                .description("API for Railway cars serving Application")
+                .contact(new Contact("Mikhail Nikulin", null, "mihanikw2g@gmail.com"))
                 .license("Apache License Version 2.0")
                 .build();
     }
