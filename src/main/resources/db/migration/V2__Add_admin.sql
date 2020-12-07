@@ -4,4 +4,5 @@ VALUES (1, '', 1, 'Администратор', 'Администратор', '�
 
 INSERT INTO user_role (user_id, roles)
 VALUES (1, 'ROLE_ADMIN'),
-       (1, 'ROLE_USER');
+       (1, 'ROLE_USER'),
+       (1, 'ROLE_WATCH');
