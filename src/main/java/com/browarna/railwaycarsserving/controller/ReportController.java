@@ -1,13 +1,12 @@
 package com.browarna.railwaycarsserving.controller;
 
+import com.browarna.railwaycarsserving.dto.GeneralSetReportRowDto;
+import com.browarna.railwaycarsserving.dto.PeriodCustomerOperationDto;
 import com.browarna.railwaycarsserving.dto.StaticReportRowDto;
 import com.browarna.railwaycarsserving.service.ReportService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -21,14 +20,18 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @GetMapping("/{afterDate}/{beforeDate}")
+    @PostMapping("/static")
     public ResponseEntity<List<StaticReportRowDto>> getStaticReport(
-            @PathVariable Date afterDate, @PathVariable Date beforeDate) {
-        return ResponseEntity.status(OK).body(reportService.getStaticReport(afterDate, beforeDate));
+            @RequestBody PeriodCustomerOperationDto body) {
+        return ResponseEntity.status(OK).body(reportService.getStaticReport(
+                body.getAfterDate(), body.getBeforeDate(), body.getCustomer()));
     }
 
-    @GetMapping
-    public ResponseEntity<List<StaticReportRowDto>> getReport() {
-        return ResponseEntity.status(OK).body(reportService.getReport());
+    @PostMapping("/general-set")
+    public ResponseEntity<List<GeneralSetReportRowDto>> getGeneralSetReport(
+            @RequestBody PeriodCustomerOperationDto body) {
+        return ResponseEntity.status(OK).body(reportService.getGeneralSetReport(
+                body.getAfterDate(), body.getBeforeDate(), body.getOperation(), body.getCustomer()));
     }
+
 }

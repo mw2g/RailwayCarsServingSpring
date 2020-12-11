@@ -5,14 +5,14 @@ public interface StaticReportRowDto {
     String getOperation();
     String getCargoType();
     String getWagonType();
-    Long getDeliveryWagonQuantity();
-    Long getDeliveryWeightSum();
-    Long getDispatchWagonQuantity();
-    Long getDispatchWeightSum();
-    Long getLoadUnloadWorkQuantity();
-    Long getLoadUnloadWorkWeightSum();
-    Long getCustomerLoadUnloadWorkQuantity();
-    Long getCustomerLoadUnloadWorkWeightSum();
-    Long getNotEndDelivery();
-    Long getWithoutOperation();
+    Double getDeliveryWagonQuantity();
+    Double getDeliveryWeightSum();
+    Double getDispatchWagonQuantity();
+    Double getDispatchWeightSum();
+    Double getLoadUnloadWorkQuantity();
+    Double getLoadUnloadWorkWeightSum();
+    Double getCustomerLoadUnloadWorkQuantity();
+    Double getCustomerLoadUnloadWorkWeightSum();
+    Double getNotEndDelivery();
+    Double getWithoutOperation();
 }

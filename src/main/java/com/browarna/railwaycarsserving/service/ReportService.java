@@ -1,5 +1,6 @@
 package com.browarna.railwaycarsserving.service;
 
+import com.browarna.railwaycarsserving.dto.GeneralSetReportRowDto;
 import com.browarna.railwaycarsserving.dto.StaticReportRowDto;
 import com.browarna.railwaycarsserving.repository.ReportRepository;
 import lombok.AllArgsConstructor;
@@ -15,15 +16,23 @@ import java.util.List;
 public class ReportService {
     private final ReportRepository reportRepository;
 
-    public List<StaticReportRowDto> getStaticReport(Date afterDate, Date beforeDate) {
-
-        List<StaticReportRowDto> staticReport = reportRepository.staticReport(afterDate, beforeDate);
-        return staticReport;
+    public List<StaticReportRowDto> getStaticReport(Date afterDate, Date beforeDate, String customerName) {
+        List<StaticReportRowDto> report;
+        if (customerName.equals("")) {
+            report = reportRepository.staticReport(afterDate, beforeDate);
+        } else {
+            report = reportRepository.staticReportForCustomer(afterDate, beforeDate, customerName);
+        }
+        return report;
     }
 
-    public List<StaticReportRowDto> getReport() {
-
-        List<StaticReportRowDto> staticReport = reportRepository.report();
-        return staticReport;
+    public List<GeneralSetReportRowDto> getGeneralSetReport(Date afterDate, Date beforeDate, String excludeOperation, String customerName) {
+        List<GeneralSetReportRowDto> report;
+        if (customerName.equals("")) {
+            report = reportRepository.generalSetReport(afterDate, beforeDate, excludeOperation);
+        } else {
+            report = reportRepository.generalSetReportForCustomer(afterDate, beforeDate, excludeOperation, customerName);
+        }
+        return report;
     }
 }

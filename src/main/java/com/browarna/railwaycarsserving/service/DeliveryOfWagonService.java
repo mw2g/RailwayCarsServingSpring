@@ -1,12 +1,10 @@
 package com.browarna.railwaycarsserving.service;
 
 import com.browarna.railwaycarsserving.dto.BaseRateAndPenaltyResponse;
+import com.browarna.railwaycarsserving.dto.DeliveryOfWagonDto;
 import com.browarna.railwaycarsserving.dto.StatementWithRateRequest;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.mapper.DeliveryOfWagonMapper;
-import com.browarna.railwaycarsserving.model.*;
-import com.browarna.railwaycarsserving.repository.*;
-import com.browarna.railwaycarsserving.dto.DeliveryOfWagonDto;
 import com.browarna.railwaycarsserving.model.*;
 import com.browarna.railwaycarsserving.repository.*;
 import lombok.AllArgsConstructor;
