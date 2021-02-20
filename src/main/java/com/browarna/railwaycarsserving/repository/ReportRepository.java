@@ -148,6 +148,7 @@ public interface ReportRepository extends JpaRepository<DeliveryOfWagon, Long> {
             "\td.owner_id = o.owner_id\n" +
             "where\n" +
             "\td.end_date between ?1 and ?2\n" +
+            "\tand co.operation_name != 'ВЕСОПОВЕРОЧНЫЙ'\n" +
             "\tand co.operation_name != ?3\n" +
             "\tand c.customer_name = ?4\n" +
             "group by\n" +
@@ -200,6 +201,7 @@ public interface ReportRepository extends JpaRepository<DeliveryOfWagon, Long> {
             "\td.owner_id = o.owner_id\n" +
             "where\n" +
             "\td.end_date between ?1 and ?2\n" +
+            "\tand co.operation_name != 'ВЕСОПОВЕРОЧНЫЙ'\n" +
             "\tand co.operation_name != ?3\n" +
             "group by\n" +
             "\tc.customer_name,\n" +

@@ -40,7 +40,7 @@ public class StatementService {
         return statementDtoList;
     }
 
-    public StatementWithRateResponse getStatementById(Long statementId) {
+    public StatementWithRateResponse getStatementWithRateById(Long statementId) {
 
         Statement statement = statementRepository.findById(statementId).get();
         StatementDto statementDto = statementMapper.mapToDto(statement);
@@ -54,6 +54,9 @@ public class StatementService {
         Tariff deliveryDispatchTariff = tariffRepository
                 .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
                         "deliveryDispatchWork", date).get();
+        if (statement.getCargoOperation().getOperationName().equals("БЕЗ ОПЕРАЦИИ")) {
+            deliveryDispatchTariff.setTariff(0.0);
+        }
         Tariff shuntingTariff = tariffRepository
                 .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
                         "shuntingWork", date).get();
@@ -68,12 +71,12 @@ public class StatementService {
         return statementWithRateResponse;
     }
 
-//    public StatementDto getStatementById(Long statementId) {
-//
-//        Statement statement = statementRepository.findById(statementId).get();
-//        StatementDto statementDto = statementMapper.mapToDto(statement);
-//        return statementDto;
-//    }
+    public StatementDto getStatementById(Long statementId) {
+
+        Statement statement = statementRepository.findById(statementId).get();
+        StatementDto statementDto = statementMapper.mapToDto(statement);
+        return statementDto;
+    }
 
     public StatementDto createStatement(StatementDto statementDto) {
         Statement statement = statementMapper.map(statementDto);
@@ -99,17 +102,6 @@ public class StatementService {
         statement.setSigner(signerRepository.findByInitials(statementDto.getSigner()));
         statement.setComment(statementDto.getComment());
 
-//        for (MemoOfDispatchDto memo : statementDto.getMemoOfDispatchList()) {
-//            MemoOfDispatch memoOfDispatchById = memoOfDispatchRepository.findById(memo.getMemoOfDispatchId()).get();
-//            memoOfDispatchById.setStartDate(statement.getStartDate());
-//            memoOfDispatchById.setCustomer(statement.getCustomer());
-//            memoOfDispatchById.setCargoOperation(statement.getCargoOperation());
-//            if (cargoOperation.getOperationId() != 1) {
-//                memoOfDispatchById.setLoadUnloadWork(false);
-//            }
-//            memoOfDispatchRepository.save(memoOfDispatchById);
-//        }
-
         return statementMapper.mapToDto(statementRepository.save(statement));
     }
 
@@ -122,23 +114,33 @@ public class StatementService {
             memoOfDispatchRepository.save(memo);
         }
         statementRepository.delete(statement);
-//        for (DeliveryOfWagon delivery : statement.getDeliveryOfWagonList()) {
-//            memoOfDispatchRepository.delete(delivery);
-//        }
     }
 
     public StatementRateResponse getRate(Long id) {
         Statement statement = statementRepository.findById(id).get();
         Date date = statement.getCreated();
-//        Date date = Date.from(statement.getCreated());
-        StatementRateResponse response = new StatementRateResponse();
-        TimeNorm turnoverTimeNorm = timeNormRepository
-                .findFirstByNormType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
-                "turnoverTime", date).get();
         TimeNorm deliveryDispatchTimeNorm = timeNormRepository
                 .findFirstByNormType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
-                "deliveryDispatchTime", date).get();
-        response.setTurnoverTimeNorm(turnoverTimeNorm);
+                        "deliveryDispatchTime", date).get();
+        TimeNorm turnoverTimeNorm = timeNormRepository
+                .findFirstByNormType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
+                        "turnoverTime", date).get();
+        Tariff deliveryDispatchTariff = tariffRepository
+                .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
+                        "deliveryDispatchWork", date).get();
+        if (statement.getCargoOperation().getOperationName().equals("БЕЗ ОПЕРАЦИИ")) {
+            deliveryDispatchTariff.setTariff(0.0);
+        }
+        Tariff shuntingTariff = tariffRepository
+                .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
+                        "shuntingWork", date).get();
+        Tariff loadUnloadTariff = tariffRepository
+                .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
+                        "loadUnloadWork", date).get();
+        IndexToBaseRate indexToBaseRate = indexToBaseRateRepository
+                .findFirstByRelevanceDateLessThanEqualOrderByRelevanceDateDesc(date).get();
+        StatementRateResponse response = new StatementRateResponse(deliveryDispatchTimeNorm, turnoverTimeNorm,
+                deliveryDispatchTariff, shuntingTariff, loadUnloadTariff, indexToBaseRate);
         return response;
     }
 }

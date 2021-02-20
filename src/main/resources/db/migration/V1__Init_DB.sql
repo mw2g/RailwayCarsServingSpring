@@ -77,6 +77,12 @@ create table owner (owner_id bigint not null auto_increment,
     primary key (owner_id)
 );
 
+create table setting (setting_id bigint not null auto_increment,
+    setting_type varchar(255) not null,
+    setting_value varchar(255),
+    primary key (setting_id)
+);
+
 create table penalty (penalty_id bigint not null auto_increment,
     penalty double precision not null,
     relevance_date datetime(6) not null,

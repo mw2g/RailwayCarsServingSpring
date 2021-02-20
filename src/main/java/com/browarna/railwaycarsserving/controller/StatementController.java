@@ -31,7 +31,7 @@ public class StatementController {
     @GetMapping("/{id}")
     public ResponseEntity<StatementWithRateResponse> getStatementById(@PathVariable Long id) {
         return ResponseEntity.status(OK)
-                .body(statementService.getStatementById(id));
+                .body(statementService.getStatementWithRateById(id));
     }
 
     @GetMapping("/rate/{id}")

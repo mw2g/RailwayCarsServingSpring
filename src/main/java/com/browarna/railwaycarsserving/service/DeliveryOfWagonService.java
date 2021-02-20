@@ -55,6 +55,10 @@ public class DeliveryOfWagonService {
         DeliveryOfWagon deliveryOfWagon = deliveryOfWagonMapper.map(deliveryOfWagonDto);
         deliveryOfWagon.setCreated(new Date());
         deliveryOfWagon.setAuthor(authService.getCurrentUser());
+        if (deliveryOfWagonDto.getMemoOfDelivery() != null) {
+            MemoOfDelivery memoOfDelivery = memoOfDeliveryRepository.findById(deliveryOfWagonDto.getMemoOfDelivery()).get();
+            deliveryOfWagon.setMemoOfDelivery(memoOfDelivery);
+        }
         return deliveryOfWagonMapper.mapToDto(deliveryOfWagonRepository.save(deliveryOfWagon));
     }
 
@@ -163,6 +167,7 @@ public class DeliveryOfWagonService {
     public void removeMemoOfDispatchFromDelivery(Long deliveryId) {
         DeliveryOfWagon delivery = deliveryOfWagonRepository.findById(deliveryId).get();
         delivery.setMemoOfDispatch(null);
+        delivery.setEndDate(null);
         deliveryOfWagonRepository.save(delivery);
     }
 

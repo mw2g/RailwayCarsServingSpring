@@ -1,10 +1,9 @@
 package com.browarna.railwaycarsserving.security;
 
-import com.browarna.railwaycarsserving.model.User;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
+import com.browarna.railwaycarsserving.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import java.time.Instant;
 import static io.jsonwebtoken.Jwts.parserBuilder;
 import static java.util.Date.from;
 
-@Slf4j
 @Service
 public class JwtProvider {
 

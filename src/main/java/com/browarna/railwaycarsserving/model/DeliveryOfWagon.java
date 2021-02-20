@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
@@ -18,6 +21,8 @@ public class DeliveryOfWagon {
     private Date created;
     private Date startDate;
     private Date endDate;
+    @DecimalMin(value = "0.00", message = "Cargo weight must be positive.")
+    @DecimalMax(value = "999.99", message = "Cargo weight must not exceed 999.99.")
     private double cargoWeight;
     private boolean loadUnloadWork;
     private double shuntingWorks;
