@@ -1,9 +1,7 @@
 package com.browarna.railwaycarsserving.service;
 
-import com.browarna.railwaycarsserving.dto.StatementRateResponse;
-import com.browarna.railwaycarsserving.model.*;
-import com.browarna.railwaycarsserving.repository.*;
 import com.browarna.railwaycarsserving.dto.StatementDto;
+import com.browarna.railwaycarsserving.dto.StatementRateResponse;
 import com.browarna.railwaycarsserving.dto.StatementWithRateResponse;
 import com.browarna.railwaycarsserving.exceptions.RailwayCarsServingException;
 import com.browarna.railwaycarsserving.mapper.StatementMapper;
@@ -51,10 +49,13 @@ public class StatementService {
         TimeNorm turnoverTimeNorm = timeNormRepository
                 .findFirstByNormType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
                         "turnoverTime", date).get();
-        Tariff deliveryDispatchTariff = tariffRepository
-                .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
-                        "deliveryDispatchWork", date).get();
-        if (statement.getCargoOperation().getOperationName().equals("БЕЗ ОПЕРАЦИИ")) {
+        Tariff deliveryDispatchTariff;
+        if (!statement.getCargoOperation().getOperationName().equals("БЕЗ ОПЕРАЦИИ")) {
+            deliveryDispatchTariff = tariffRepository
+                    .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
+                            "deliveryDispatchWork", date).get();
+        } else {
+            deliveryDispatchTariff = new Tariff();
             deliveryDispatchTariff.setTariff(0.0);
         }
         Tariff shuntingTariff = tariffRepository
@@ -125,10 +126,13 @@ public class StatementService {
         TimeNorm turnoverTimeNorm = timeNormRepository
                 .findFirstByNormType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
                         "turnoverTime", date).get();
-        Tariff deliveryDispatchTariff = tariffRepository
-                .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
-                        "deliveryDispatchWork", date).get();
-        if (statement.getCargoOperation().getOperationName().equals("БЕЗ ОПЕРАЦИИ")) {
+        Tariff deliveryDispatchTariff;
+        if (!statement.getCargoOperation().getOperationName().equals("БЕЗ ОПЕРАЦИИ")) {
+            deliveryDispatchTariff = tariffRepository
+                    .findFirstByTariffType_TypeCodeAndRelevanceDateLessThanEqualOrderByRelevanceDateDesc(
+                            "deliveryDispatchWork", date).get();
+        } else {
+            deliveryDispatchTariff = new Tariff();
             deliveryDispatchTariff.setTariff(0.0);
         }
         Tariff shuntingTariff = tariffRepository
